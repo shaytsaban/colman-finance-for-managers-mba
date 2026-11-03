@@ -85,7 +85,7 @@ page = f'''<!doctype html>
 <section class="block">
 <h2 class="sec">השיעורים</h2>
 <article class="lec" id="lesson-1">
-<div class="lec-head"><div class="lec-n">1</div><div><h3>מבוא למימון ומטרת הפירמה, וערך עתידי</h3><div class="sub">מפגש {n(1)} · מועד המפגש יעודכן</div></div></div>
+<div class="lec-head"><div class="lec-n">1</div><div><h3>מבוא למימון ומטרת הפירמה, וערך עתידי</h3><div class="sub">מפגש {n(1)} · {n("3.11.2026")}</div></div></div>
 <div class="lec-body">
 <div><h4>מה לומדים בשיעור</h4><ul class="learn">
 <li>מימון: השקעות וגיוס משאבים, ומטרת הפירמה</li>
@@ -108,7 +108,7 @@ page = f'''<!doctype html>
 </div></div>
 </div>
 </div>
-<div class="rec"><h4>הקלטת השיעור</h4>
+<div class="rec"><h4>הקלטת השיעור, מהמפגש של {n("3.11.2026")}</h4>
 <div class="recbox" id="rec-1">
 <iframe src="https://www.youtube-nocookie.com/embed/lAyfe7NmzPw" title="הקלטת שיעור 1" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </div></div>
