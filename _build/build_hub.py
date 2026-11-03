@@ -110,8 +110,7 @@ page = f'''<!doctype html>
 </div>
 <div class="rec"><h4>הקלטת השיעור</h4>
 <div class="recbox" id="rec-1">
-<!-- להטמעת ההקלטה: למחוק את recph ולהוסיף כאן iframe עם כתובת הסרטון -->
-<div class="recph"><div><b>ההקלטה תתווסף כאן</b>לאחר המפגש</div></div>
+<iframe src="https://www.youtube-nocookie.com/embed/lAyfe7NmzPw" title="הקלטת שיעור 1" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </div></div>
 <div class="todo"><h4>📝 מה עושים בשיעור {n(1)}</h4><ol>
 <li><b>בשיעור:</b> עובדים במצגת, בגיליונות שבתוך השקפים.</li>
