@@ -5,40 +5,6 @@ assert round(_fin.FV(0.07, 5, 0, -_fin.FV(0.05, 9, 0, -35000)), 2) == 76153.63
 assert round(_fin.FV(0.005, 60, 0, -_fin.FV(0.02, 4, 0, -_fin.FV(0.05, 3, 0, -100000))), 2) == 169017.74
 assert round(_fin.FV(0.03, 5, 0, 400000), 2) == -463709.63
 
-FVROWS = [('ריבית לתקופה', 'rate'), ('מספר תקופות', 'nper'), ('תשלום קבוע בכל תקופה', 'pmt'), ('סכום בהווה', 'pv'), ('ערך עתידי', 'fv')]
-
-
-def _pctf(v):
-    s = f'{v * 100:.6f}'.rstrip('0').rstrip('.')
-    return 'pct' + str(len(s.split('.')[1]) if '.' in s else 0)
-
-
-def fvt(cols, r1=1, corner='', lab=True):
-    """A future value table in the course layout: A the Hebrew label, B the Excel name, one column per part or stage from C.
-    cols: dicts h (header), rate, nper, pmt, pv. A number is typed by the student; '=..' in nper is a period conversion the student writes;
-    '=..' in pv is a formula of the solution (the stage before, with the sign flipped). Returns data, sol, fmt and the fv cells."""
-    d, s, f, out = {}, {}, {}, []
-    if lab:
-        d[f'A{r1}'] = corner or 'הנתון'
-        d[f'B{r1}'] = 'שם'
-        for k, (he, en) in enumerate(FVROWS):
-            d[f'A{r1 + 1 + k}'] = he; d[f'B{r1 + 1 + k}'] = en
-    for j, c in enumerate(cols):
-        L = chr(67 + j)
-        d[f'{L}{r1}'] = c['h']
-        rr = {k: f'{L}{r1 + 1 + i}' for i, k in enumerate(['rate', 'nper', 'pmt', 'pv', 'fv'])}
-        for k in ('rate', 'nper', 'pmt', 'pv'):
-            v = c[k]
-            if isinstance(v, str) and v.startswith('=') and k == 'pv':
-                s[rr[k]] = v
-            else:
-                d[rr[k]] = v
-        s[rr['fv']] = f"=FV({rr['rate']},{rr['nper']},{rr['pmt']},{rr['pv']})"
-        f[rr['rate']] = _pctf(c['rate']); f[rr['pv']] = 'num2'; f[rr['fv']] = 'num2'; f[rr['pmt']] = 'num0'
-        out.append(rr['fv'])
-    return d, s, f, out
-
-
 # ================================================================ part 3
 opener(3, 'ערך עתידי של סכום יחיד', 'שאלת החלק: לווים היום, מחזירים בעוד 3 שנים. כמה מחזירים?',
        ['הלוואת גישור: שנה אחר שנה בגיליון', 'ריבית דריבית מול ריבית פשוטה', 'אותו חישוב בתא אחד, ואז בפונקציה של Excel', 'תקופת ריבית: חודש, חצי שנה, שנה', 'ריבית בפועל מול אלטרנטיבה, במספרים'], 40)
@@ -111,8 +77,8 @@ S('s-rule', 'הכלל: ארבעה מרכיבים', 'מהדוגמה לכלל: א�
 S('s-fvf', 'הפונקציה FV', 'הפונקציה FV: מגדירים, ו-Excel מחשב',
   DEF('הפונקציה FV', 'מחשבת ערך עתידי. התחביר: ' + XL('=FV(rate, nper, pmt, [pv], [type])') + '. הארגומנטים לפי הסדר, מופרדים בפסיק.', XL('=FV(5%,3,0,50000)') + ' נותן −57,881.25.', n=1, trm='fvf')
   + ST(2, TABLE(['ארגומנט', 'מה זה', 'אצל אבנר'], [
-      ['[[rate|rate]]', 'הריבית לתקופה', '5%'], ['nper', 'מספר תקופות הריבית (בסדרה: מספר התשלומים)', '3'], ['pmt', 'תשלום קבוע בכל תקופה. בסכום יחיד: 0', '0'],
-      ['pv', 'הסכום בהווה. קיבלתי: פלוס. שילמתי או הפקדתי: מינוס', '50,000'], ['[[type|type]]', 'רשות. רק בסדרות. בינתיים משמיטים', 'משמיטים']], cls='tight'))
+      ['[[rate|rate]]', 'הריבית לתקופה', '5%'], ['nper', 'מספר תקופות הריבית', '3'], ['pmt', 'תשלום קבוע בכל תקופה. בסכום יחיד: 0', '0'],
+      ['pv', 'הסכום בהווה. קיבלתי: פלוס. שילמתי או הפקדתי: מינוס', '50,000'], ['[[type|type]]', 'רשות. בינתיים משמיטים', 'משמיטים']], cls='tight'))
   + DEF('מוסכמת הסימן (Sign convention)', 'באקסל כסף שנכנס אליך חיובי, וכסף שיוצא ממך שלילי. אבנר קיבל 50,000 (פלוס), ולכן יחזיר (מינוס).', XL('=FV(5%,3,0,50000)') + ' נותן −57,881.25: תשלום של אבנר.', n=3, trm='sign')
   , kick='חלק 3 · הגדרות')
 

@@ -6,13 +6,16 @@ COURSE = 'מימון למנהלות ומנהלים'
 INST = 'המסלול האקדמי המכללה למנהל · MBA'
 SEM = 'סמסטר א׳ תשפ״ז'
 LESSON = globals().get('LESSON', 1)
-TOTAL_PARTS = {1: 6}[LESSON]
+TOTAL_PARTS = {1: 6, 2: 1}[LESSON]
 # per lesson: deck title, subtitle, chips, cover line and the next meeting. The first meeting date is not in the source files.
 LMETA = {
  1: dict(date='', h1=('מבוא למימון:', 'מטרת הפירמה וערך עתידי'), title='מבוא למימון וערך עתידי',
          sub='למה כסף של היום שווה יותר מכסף של מחר, איך בודקים כדאיות מול האלטרנטיבה, וכמה יצטבר בעתיד, בגיליון.', chip='כל שאלה נפתרת ב-Excel',
-         cover='מטרת הפירמה, ערך כפונקציה של תזרים, עיתוי וסיכון, ריבית בפועל וריבית אלטרנטיבית, ריבית דריבית, הפונקציה FV, ריבית משתנה בשלבים, וטעימה מסדרות.',
-         next_h='ערך עתידי: מקרים מורכבים', next_t='ריבית שמשתנה באמצע סדרה, הפקדות בסכומים משתנים, הפסקה בתשלומים, וחילוץ: כמה להפקיד בכל חודש כדי להגיע ליעד.')}[LESSON]
+         cover='מטרת הפירמה, ערך כפונקציה של תזרים, עיתוי וסיכון, ריבית בפועל וריבית אלטרנטיבית, ריבית דריבית, הפונקציה FV, ריבית משתנה בשלבים, ותרגול עצמי עם גיליון חי.',
+         next_h='ערך עתידי של סדרה ומקרים מורכבים', next_t='הפקדה קבועה בכל תקופה והארגומנט pmt, ריבית שמשתנה באמצע סדרה, הפקדות בסכומים משתנים, הפסקה בתשלומים, וחילוץ: כמה להפקיד בכל חודש כדי להגיע ליעד.'),
+ # lesson 2 is a draft: only part 1 (the series, moved from lesson 1) exists. Not published.
+ 2: dict(date='', h1=('ערך עתידי של סדרה', 'ומקרים מורכבים'), title='ערך עתידי של סדרה', sub='הפקדה קבועה בכל תקופה, בגיליון.', chip='כל שאלה נפתרת ב-Excel',
+         cover='ערך עתידי של סדרה.', next_h='יעודכן', next_t='יעודכן.')}[LESSON]
 XSPECS = []        # every live sheet, in deck order: the practice workbooks are built from these
 SL = []            # every slide, in order
 CUR = [None]       # current part number
@@ -62,9 +65,9 @@ def MCS(sid, title, h, items):
     S(sid, title, h, f'<div class="mcrow n{len(items)}">' + ''.join(items) + '</div>', kick=f'חלק {CUR[0]} · בדיקת הבנה')
 
 
-def opener(n, title, q, learn, mins, note=''):
+def opener(n, title, q, learn, mins, note='', self=False):
     CUR[0] = n
-    SL.append(dict(id=f'p-{n}', title=f'פתיחת חלק {n}: {title}', h=title, kind='opener', part=n, q=q, learn=learn, mins=mins, note=note, cls='', kick=None, body=''))
+    SL.append(dict(id=f'p-{n}', title=f'פתיחת חלק {n}: {title}', h=title, kind='opener', part=n, q=q, learn=learn, mins=mins, note=note, self=self, cls='', kick=None, body=''))
 
 
 def calc(cid, title, h, intro, fields, pdfx):
@@ -493,5 +496,5 @@ def RL(items, start=1):
 
 
 exec(R('content_g.py'))
-for _f in {1: ['content_l1a.py', 'content_l1b.py', 'content_l1c.py']}[LESSON]:
+for _f in ['content_fv.py'] + {1: ['content_l1a.py', 'content_l1b.py', 'content_l1c.py'], 2: ['content_l2a.py']}[LESSON]:
     exec(R(_f))

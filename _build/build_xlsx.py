@@ -127,7 +127,7 @@ for s, ev in zip(XSPECS, EV):
             if rel > 1e-9: errs.append((n, a, who, x, lo))
 print('sheets', len(XSPECS), 'formulas', nform, 'largest relative gap (python, engine vs LibreOffice)', f'{worst:.1e}', 'errors', errs[:10])
 print('rtl', all(FM[sname(s)].sheet_view.rightToLeft for s in XSPECS), '| charts', sum(len(FM[sname(s)]._charts) for s in XSPECS))
-KEY = {'q-1': ('C7', 57881.25), 'q-dand': ('D6', 76153.6325971544), 'q-valdi': ('E6', 169017.739749039), 'q-taltul': ('G6', -91625.2486808057), 'q-2': ('C6', -463709.62972), 'q-4': ('C6', 50931.2084159724), 'q-5': ('C6', 192731.460302044)}
+KEY = {'q-1': ('C7', 57881.25), 'q-dand': ('D6', 76153.6325971544), 'q-valdi': ('E6', 169017.739749039), 'q-taltul': ('G6', -91625.2486808057), 'q-2': ('C6', -463709.62972)}
 for s in XSPECS:
     if s['sid'] in KEY:
         a, e = KEY[s['sid']]; v = V[sname(s)][a].value

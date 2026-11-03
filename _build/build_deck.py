@@ -31,7 +31,7 @@ def render(s, total):
                 '<p class="sub" style="font-size:22px;margin-top:26px;color:#c8d4f2">פניות רק במייל: <span dir="ltr">shay.tsaban@gmail.com</span>. חובה לרשום את שם המוסד ואת שם הקורס.</p></div></section>')
     if k == 'opener':
         n = s['part']
-        when = f'לעבודה עצמית · כ-{s["mins"]} דקות' if n == total else f'כ-{s["mins"]} דקות'
+        when = f'לתרגול עצמי · כ-{s["mins"]} דקות' if s.get('self') else f'כ-{s["mins"]} דקות'
         note = f'<div class="pd-note">{TX(s["note"])}</div>' if s.get('note') else ''
         return (f'<section class="slide dark pd" id="{s["id"]}" data-title="{s["title"]}" style="--pc:#7fe3d6"><div class="pd-num">{n}</div><div class="pd-in">'
                 f'<div class="kick" style="color:#ffb199"><span>חלק <span class="n">{n}</span> מתוך <span class="n">{total}</span> · {TX(when)}</span></div><div class="pd-h">{s["h"]}</div><div class="pd-q">{TX(s["q"])}</div>{note}'
