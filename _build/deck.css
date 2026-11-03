@@ -393,3 +393,6 @@ code.xl{direction:ltr;unicode-bidi:isolate;display:inline-block;font:700 20px 'M
 .meme.sm .mcap{font-size:16.5px}
 .qx.wide{grid-template-columns:minmax(0,.66fr) minmax(0,1.34fr)}
 .qx.wide .qr .card.qstem{font-size:17px}
+.qx .xw .meme{margin-top:10px;max-width:420px}
+.meme.side{width:380px;margin-top:10px;margin-right:auto}
+.meme.inrow{flex:none;width:330px}
