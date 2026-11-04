@@ -110,7 +110,7 @@ page = f'''<!doctype html>
 </div>
 <div class="rec"><h4>הקלטת השיעור, מהמפגש של {n("3.11.2026")}</h4>
 <div class="recbox" id="rec-1">
-<iframe src="https://www.youtube-nocookie.com/embed/lAyfe7NmzPw" title="הקלטת שיעור 1" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<iframe src="https://www.youtube-nocookie.com/embed/HJ6kjmwDoTI" title="הקלטת שיעור 1" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </div></div>
 <div class="todo"><h4>📝 מה עושים בשיעור {n(1)}</h4><ol>
 <li><b>בשיעור:</b> עובדים במצגת, בגיליונות שבתוך השקפים.</li>
