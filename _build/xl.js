@@ -272,6 +272,8 @@ function mount(host,cfg){
  /* pointer: select, drag a range, insert a reference while writing a formula, or drag the fill handle */
  let drag=null;
  let lastDown=null;
+ /* typing between two presses means they are two separate clicks, not a double click */
+ host.addEventListener('keydown',()=>{lastDown=null;},true);
  g.addEventListener('pointerdown',e=>{const cell=e.target.closest('td');
   const twice=k=>{const now=e.timeStamp,hit=lastDown&&lastDown.k===k&&now-lastDown.t<450&&Math.abs(e.clientX-lastDown.x)<8&&Math.abs(e.clientY-lastDown.y)<8;lastDown=hit?null:{k,t:now,x:e.clientX,y:e.clientY};return hit;};
   if(e.target.classList.contains('xl-fh')){e.preventDefault();if(twice('fh')){fillDownAuto();return;}drag={k:'fill',b:blk(),to:null};try{g.setPointerCapture(e.pointerId);}catch(_){}return;}
@@ -313,14 +315,16 @@ function mount(host,cfg){
   const cell=(tgt.closest&&tgt.closest('td'))||e.target.closest('td');if(!cell||!g.contains(cell))return;sel=parseAddr(cell.dataset.a);sel2={...sel};startEdit('',true,'edit');});
  const gKey=e=>{if(editing)return;const k=e.key;
   const mod=e.ctrlKey||e.metaKey;
-  if(mod&&(k==='c'||k==='C'||k==='ג'||k==='x'||k==='X'||k==='ס')){e.preventDefault();e.stopPropagation();const b=blk(),cut=/[xXס]/.test(k);
+  /* by the physical key (e.code), so it works in any keyboard layout: in Hebrew the C key types ב and the V key types ה */
+  const kc0=e.code||'',isC=kc0==='KeyC'||(!kc0&&/^[cCב]$/.test(k)),isX=kc0==='KeyX'||(!kc0&&/^[xXס]$/.test(k)),isV=kc0==='KeyV'||(!kc0&&/^[vVה]$/.test(k));
+  if(mod&&!e.shiftKey&&(isC||isX)){e.preventDefault();e.stopPropagation();const b=blk(),cut=isX;
    /* the whole selected block is copied, cell by cell, with its formats */
    CLIP={r0:b.r0,c0:b.c0,h:b.r1-b.r0+1,w:b.c1-b.c0+1,cells:[]};
    for(let r=b.r0;r<=b.r1;r++){const row=[];for(let c=b.c0;c<=b.c1;c++){const a=addr(r,c);row.push({raw:S.raw[a],fmt:S.fmt[a]});}CLIP.cells.push(row);}
    try{navigator.clipboard&&navigator.clipboard.writeText(CLIP.cells.map(row=>row.map(x=>x.raw==null?'':x.raw).join('\t')).join('\n')).catch(()=>{});}catch(_){}
    if(cut){eachSel(a=>S.set(a,''));render();if(cfg.onChange)cfg.onChange();}
    toastX((cut?'נגזר':'הועתק')+(CLIP.h*CLIP.w>1?` (${CLIP.h*CLIP.w} תאים)`:'')+'. סמנו תא או טווח, והדביקו ב-Ctrl+V');return;}
-  if(mod&&(k==='v'||k==='V'||k==='ה')){e.preventDefault();e.stopPropagation();if(!CLIP||!CLIP.cells)return;
+  if(mod&&!e.shiftKey&&isV){e.preventDefault();e.stopPropagation();if(!CLIP||!CLIP.cells)return;
    /* one target cell: the block lands from it. A larger target: the block repeats over it, as in Excel */
    const b=blk(),th=Math.max(CLIP.h,b.r1-b.r0+1),tw=Math.max(CLIP.w,b.c1-b.c0+1);
    for(let i=0;i<th;i++)for(let j=0;j<tw;j++){const r=b.r0+i,c=b.c0+j;if(r>=R||c>=C)continue;const si=i%CLIP.h,sj=j%CLIP.w,src=CLIP.cells[si][sj],a=addr(r,c);

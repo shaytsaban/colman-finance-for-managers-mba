@@ -129,7 +129,7 @@ print('sheets', len(XSPECS), 'formulas', nform, 'largest relative gap (python, e
 print('rtl', all(FM[sname(s)].sheet_view.rightToLeft for s in XSPECS), '| charts', sum(len(FM[sname(s)]._charts) for s in XSPECS))
 KEY = {1: {'q-1': ('C7', 57881.25), 'q-dand': ('D6', 76153.6325971544), 'q-valdi': ('E6', 169017.739749039), 'q-taltul': ('G6', -91625.2486808057), 'q-2': ('C6', -463709.62972)},
        # lesson 2: the answers as the coursebook prints them (sheet "Lecture 2"), to the cent where it gives cents
-       2: {'q-del': ('D6', 37150.96), 'q-tal2': ('C8', 22453.87), 'q-makd': ('C4', -4230.45), 'q-dean': ('F6', 157694.37), 't-1': ('C6', 152959.12), 'q-tal': ('E6', 173048.10), 'q-makc': ('C6', 136170.57)}}[LESSON]
+       2: {'q-del': ('D6', 37150.96), 'q-dean': ('F6', 157694.37), 't-1': ('C6', 152959.12), 'q-tal': ('E6', 173048.10), 'q-makc': ('C6', 136170.57), 'q-4': ('C6', 50931.21), 'q-5': ('C6', 192731.46)}}[LESSON]
 for s in XSPECS:
     if s['sid'] in KEY:
         a, e = KEY[s['sid']]; v = V[sname(s)][a].value

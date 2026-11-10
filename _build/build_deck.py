@@ -13,7 +13,7 @@ HEAD = f'{COURSE} · מפגש {LESSON}' + (f' · {LMETA["date"]}' if LMETA['date
 def render(s, total):
     k = s['kind']
     if k == 'title':
-        chips = [f'{NX} גיליונות Excel חיים בתוך השקפים'] + ([f'{NSV} תרגילים עם רמזים'] if NSV else []) + [f'{NMC} שאלות רב ברירה', LMETA['chip']]
+        chips = [f'{NX} גיליונות Excel חיים בתוך השקפים'] + ([f'{NSV} תרגילים עם רמזים'] if NSV else []) + [('שאלת רב ברירה אחת' if NMC == 1 else f'{NMC} שאלות רב ברירה'), LMETA['chip']]
         return (f'<section class="slide dark s1 on" id="s-title" data-title="פתיחה">'
                 '<div class="orb" style="width:320px;height:320px;background:radial-gradient(circle at 30% 30%,#58e0cf,#0f9d90 60%,transparent 72%);left:-90px;top:-70px"></div>'
                 '<div class="orb" style="width:180px;height:180px;background:radial-gradient(circle at 30% 30%,#ffd37a,#e8960c 60%,transparent 72%);left:230px;bottom:90px;animation-delay:-3s"></div>'

@@ -6,17 +6,19 @@ COURSE = 'מימון למנהלות ומנהלים'
 INST = 'המסלול האקדמי המכללה למנהל · MBA'
 SEM = 'סמסטר א׳ תשפ״ז'
 LESSON = globals().get('LESSON', 1)
-TOTAL_PARTS = {1: 6, 2: 8}[LESSON]
+TOTAL_PARTS = {1: 6, 2: 7, 3: 2}[LESSON]
 # per lesson: deck title, subtitle, chips, cover line and the next meeting. The first meeting date is not in the source files.
 LMETA = {
  1: dict(date='', h1=('מבוא למימון:', 'מטרת הפירמה וערך עתידי'), title='מבוא למימון וערך עתידי',
          sub='למה כסף של היום שווה יותר מכסף של מחר, איך בודקים כדאיות מול האלטרנטיבה, וכמה יצטבר בעתיד, בגיליון.', chip='כל שאלה נפתרת ב-Excel',
          cover='מטרת הפירמה, ערך כפונקציה של תזרים, עיתוי וסיכון, ריבית בפועל וריבית אלטרנטיבית, ריבית דריבית, הפונקציה FV, ריבית משתנה בשלבים, ותרגול עצמי עם גיליון חי.',
          next_h='ערך עתידי של סדרה ומקרים מורכבים', next_t='הפקדה קבועה בכל תקופה והארגומנט pmt, ריבית שמשתנה באמצע סדרה, הפקדות בסכומים משתנים, הפסקה בתשלומים, וחילוץ: כמה להפקיד בכל חודש כדי להגיע ליעד.'),
- 2: dict(date='', h1=('ערך עתידי של סדרה', 'ומקרים מורכבים'), title='ערך עתידי של סדרה ומקרים מורכבים',
-         sub='הפקדה קבועה בכל תקופה, יעד מאוחר מההפקדה האחרונה, ריבית שמשתנה, הפקדות שמתחלפות, וכמה להפקיד כדי להגיע ליעד.', chip='כל שאלה נפתרת ב-Excel',
-         cover='תזכורת למפגש 1, ערך עתידי של סדרה והארגומנט pmt, הארגומנט type, יעד מאוחר מההפקדה האחרונה, מקטעים של ריבית והפקדה, חילוץ ההפקדה בפונקציה PMT, ותרגול עצמי עם גיליון חי.',
-         next_h='התאמת ריבית וחילוצים', next_t='ריבית שנתונה ביחידה אחרת מהתשלומים, ריבית נקובה וריבית אפקטיבית, ועוד חילוצים: כמה להפקיד, וכמה זמן לחסוך.')}[LESSON]
+ 2: dict(date='', h1=('ערך עתידי', 'של סדרה'), title='ערך עתידי של סדרה',
+         sub='הפקדה קבועה בכל תקופה, הפקדה בתחילת התקופה או בסופה, יעד מאוחר מההפקדה האחרונה, וריבית שמשתנה באמצע הסדרה.', chip='כל שאלה נפתרת ב-Excel',
+         cover='תזכורת למפגש 1, ערך עתידי של סדרה והארגומנט pmt, הארגומנט type, יעד מאוחר מההפקדה האחרונה, ריבית שמשתנה באמצע סדרה, תרגול עצמי עם פתרון מלא, וסיכום תהליכי העבודה בתרשימי זרימה.',
+         next_h='מקטעים מורכבים וחילוץ ההפקדה', next_t='ממשיכים מהמקום שעצרנו: סדרה ואחריה ריבית ביחידה אחרת, שלושה מקטעים, הפסקה בהפקדות, וכמה להפקיד בכל חודש כדי להגיע ליעד. אחר כך: התאמת ריבית.'),
+ # lesson 3 is a parking file for now (content_l3a.py): not built, not published
+ 3: dict(date='', h1=('מקטעים מורכבים', 'וחילוץ ההפקדה'), title='מקטעים מורכבים וחילוץ', sub='יעודכן.', chip='כל שאלה נפתרת ב-Excel', cover='יעודכן.', next_h='יעודכן', next_t='יעודכן.')}[LESSON]
 XSPECS = []        # every live sheet, in deck order: the practice workbooks are built from these
 SL = []            # every slide, in order
 CUR = [None]       # current part number
@@ -527,7 +529,7 @@ def MCX(sid, title, h, item, task, data, sol, widths, head, **kw):
     if MODE == 'pdf':
         S(sid, title, h, item + r); return
     cfgd, inner = r
-    S(sid, title, h, f'<div class="act xlq qx" id="{sid}-x" data-cfg="{_cfg(cfgd)}"><div class="qr">{item}</div><div class="xw">{inner}<div class="xfb"></div></div></div>', kick=f'חלק {CUR[0]} · שאלה ואקסל', cls='qslide')
+    S(sid, title, h, f'<div class="act xlq qx" id="{sid}-x" data-cfg="{_cfg(cfgd)}"><div class="qr">{item}</div><div class="xw">{inner}<div class="xfb"></div></div></div>', kick=f'חלק {CUR[0]} · בדיקת הבנה', cls='qslide')
 
 
 def _repr_targets(sol):
@@ -576,5 +578,5 @@ def RL(items, start=1):
 
 
 exec(R('content_g.py'))
-for _f in ['content_fv.py'] + {1: ['content_l1a.py', 'content_l1b.py', 'content_l1c.py'], 2: ['content_l2a.py', 'content_l2b.py', 'content_l2c.py']}[LESSON]:
+for _f in ['content_fv.py'] + {1: ['content_l1a.py', 'content_l1b.py', 'content_l1c.py'], 2: ['content_l2a.py', 'content_l2b.py', 'content_l2c.py'], 3: ['content_l2a.py', 'content_l3a.py']}[LESSON]:
     exec(R(_f))
