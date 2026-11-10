@@ -167,8 +167,8 @@ def TL(ticks, flows=None, moves=None, brace=None, marks=None, W=560, fs=17, fh=4
     y0 = ay + fh                  # axis
     p = []
     p.append(f'<line x1="6" y1="{y0}" x2="{W - 12}" y2="{y0}" stroke="#1b2d55" stroke-width="2.6"/><polygon points="{W - 4},{y0} {W - 17},{y0 - 6} {W - 17},{y0 + 6}" fill="#1b2d55"/>')
-    for l in ticks:
-        x = X[str(l)]
+    for i, l in enumerate(ticks):
+        x = left + i * dx            # by position: a timeline may hold '...' more than once
         if str(l) in ('...', '···'):
             p.append(_txt(x, y0 - 14, '···', fs + 5, W, fill='#8a93aa', weight=700))
             p.append(_txt(x, y0 + fs + 6, '···', fs, W, fill='#8a93aa', weight=700))

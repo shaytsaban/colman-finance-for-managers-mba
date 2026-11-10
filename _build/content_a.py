@@ -6,16 +6,17 @@ COURSE = 'מימון למנהלות ומנהלים'
 INST = 'המסלול האקדמי המכללה למנהל · MBA'
 SEM = 'סמסטר א׳ תשפ״ז'
 LESSON = globals().get('LESSON', 1)
-TOTAL_PARTS = {1: 6, 2: 1}[LESSON]
+TOTAL_PARTS = {1: 6, 2: 7}[LESSON]
 # per lesson: deck title, subtitle, chips, cover line and the next meeting. The first meeting date is not in the source files.
 LMETA = {
  1: dict(date='', h1=('מבוא למימון:', 'מטרת הפירמה וערך עתידי'), title='מבוא למימון וערך עתידי',
          sub='למה כסף של היום שווה יותר מכסף של מחר, איך בודקים כדאיות מול האלטרנטיבה, וכמה יצטבר בעתיד, בגיליון.', chip='כל שאלה נפתרת ב-Excel',
          cover='מטרת הפירמה, ערך כפונקציה של תזרים, עיתוי וסיכון, ריבית בפועל וריבית אלטרנטיבית, ריבית דריבית, הפונקציה FV, ריבית משתנה בשלבים, ותרגול עצמי עם גיליון חי.',
          next_h='ערך עתידי של סדרה ומקרים מורכבים', next_t='הפקדה קבועה בכל תקופה והארגומנט pmt, ריבית שמשתנה באמצע סדרה, הפקדות בסכומים משתנים, הפסקה בתשלומים, וחילוץ: כמה להפקיד בכל חודש כדי להגיע ליעד.'),
- # lesson 2 is a draft: only part 1 (the series, moved from lesson 1) exists. Not published.
- 2: dict(date='', h1=('ערך עתידי של סדרה', 'ומקרים מורכבים'), title='ערך עתידי של סדרה', sub='הפקדה קבועה בכל תקופה, בגיליון.', chip='כל שאלה נפתרת ב-Excel',
-         cover='ערך עתידי של סדרה.', next_h='יעודכן', next_t='יעודכן.')}[LESSON]
+ 2: dict(date='', h1=('ערך עתידי של סדרה', 'ומקרים מורכבים'), title='ערך עתידי של סדרה ומקרים מורכבים',
+         sub='הפקדה קבועה בכל תקופה, יעד מאוחר מההפקדה האחרונה, ריבית שמשתנה, הפקדות שמתחלפות, וכמה להפקיד כדי להגיע ליעד.', chip='כל שאלה נפתרת ב-Excel',
+         cover='תזכורת למפגש 1, ערך עתידי של סדרה והארגומנט pmt, הארגומנט type, יעד מאוחר מההפקדה האחרונה, מקטעים של ריבית והפקדה, חילוץ ההפקדה בפונקציה PMT, ותרגול עצמי עם גיליון חי.',
+         next_h='התאמת ריבית וחילוצים', next_t='ריבית שנתונה ביחידה אחרת מהתשלומים, ריבית נקובה וריבית אפקטיבית, ועוד חילוצים: כמה להפקיד, וכמה זמן לחסוך.')}[LESSON]
 XSPECS = []        # every live sheet, in deck order: the practice workbooks are built from these
 SL = []            # every slide, in order
 CUR = [None]       # current part number
@@ -496,5 +497,5 @@ def RL(items, start=1):
 
 
 exec(R('content_g.py'))
-for _f in ['content_fv.py'] + {1: ['content_l1a.py', 'content_l1b.py', 'content_l1c.py'], 2: ['content_l2a.py']}[LESSON]:
+for _f in ['content_fv.py'] + {1: ['content_l1a.py', 'content_l1b.py', 'content_l1c.py'], 2: ['content_l2a.py', 'content_l2b.py']}[LESSON]:
     exec(R(_f))

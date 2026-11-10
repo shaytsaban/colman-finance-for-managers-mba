@@ -2,9 +2,11 @@
 import os, re
 H = os.path.dirname(os.path.abspath(__file__))
 n = lambda s: f'<span class="n">{s}</span>'
-UP = [(2, 'ערך עתידי של סדרה, מקרים מורכבים וחילוצים'), ('3 עד 5', 'חישובי ערך נוכחי, ריבית ושווי'), ('6 ו-7', 'הלוואות ולוחות סילוקין'), ('8 ו-9', 'קריטריונים לבחינת כדאיות השקעות'), ('10 ו-11', 'קיצוב הון ובניית תחזית תזרימי מזומנים לתכניות השקעה'), (12, 'דיון אקטואלי: מקרה בוחן (Case Study) ומשמעות מעשית של פרספקטיבה פיננסית'), (13, 'חזרה ודיון אינטגרטיבי')]
+UP = [('3 עד 5', 'חישובי ערך נוכחי, ריבית ושווי'), ('6 ו-7', 'הלוואות ולוחות סילוקין'), ('8 ו-9', 'קריטריונים לבחינת כדאיות השקעות'), ('10 ו-11', 'קיצוב הון ובניית תחזית תזרימי מזומנים לתכניות השקעה'), (12, 'דיון אקטואלי: מקרה בוחן (Case Study) ומשמעות מעשית של פרספקטיבה פיננסית'), (13, 'חזרה ודיון אינטגרטיבי')]
 D = open(os.path.join(H, '..', 'lectures', 'lecture-1', 'presentation.html'), encoding='utf8').read()
 NS, NX, NM = D.count('<section class="slide'), D.count('act xlq'), D.count('class="mc"')
+D2 = open(os.path.join(H, '..', 'lectures', 'lecture-2', 'presentation.html'), encoding='utf8').read()
+NS2, NX2 = D2.count('<section class="slide'), D2.count('act xlq')
 ups = ''.join(f'<li><span class="un">{n(i if isinstance(i, int) else i.replace(" ו-", "-").replace(" עד ", "-"))}</span><span>{t}</span><em>בקרוב</em></li>' for i, t in UP)
 src = open(os.path.join(H, '..', '..', 'finance-for-managers', 'index.html'), encoding='utf8').read()
 css = re.search(r'<style>(.*?)</style>', src, re.S).group(1)
@@ -115,6 +117,36 @@ page = f'''<!doctype html>
 <div class="todo"><h4>📝 מה עושים בשיעור {n(1)}</h4><ol>
 <li><b>בשיעור:</b> עובדים במצגת, בגיליונות שבתוך השקפים.</li>
 <li><b>אחרי השיעור:</b> פותרים בקובץ התרגול את כל השאלות, בלי להסתכל בפתרונות. בסוף הקובץ: שני תרגילים בסגנון הבחינה.</li>
+<li><b>בדיקה:</b> רק אחרי שפתרתם, בקובץ הפתרונות. אין חובת הגשה.</li>
+</ol></div>
+</article>
+<article class="lec" id="lesson-2">
+<div class="lec-head"><div class="lec-n">2</div><div><h3>ערך עתידי של סדרה ומקרים מורכבים</h3><div class="sub">מפגש {n(2)}</div></div></div>
+<div class="lec-body">
+<div><h4>מה לומדים בשיעור</h4><ul class="learn">
+<li>תזכורת למפגש 1: ערך, ריבית, FV של סכום יחיד וחישוב בשלבים</li>
+<li>ערך עתידי של סדרה: אותו סכום בכל תקופה, והארגומנטים pmt ו-type</li>
+<li>יעד מאוחר מההפקדה האחרונה: הסדרה, ואחריה צבירה</li>
+<li>ריבית שמשתנה והפקדות שמתחלפות: עמודה לכל מקטע</li>
+<li>חילוץ: כמה להפקיד בכל חודש, בפונקציה PMT</li>
+<li>תרגול עצמי ושאלות בית, כל אחת עם גיליון חי</li>
+</ul></div>
+<div><h4>חומרי השיעור</h4>
+<div class="grp"><h5>1. בשיעור</h5><div class="links">
+<a class="lk p" href="lectures/lecture-2/presentation.html"><span class="e">🖥️</span><span><b>מצגת השיעור</b><span class="d">{n(NS2)} שקפים, וגיליון Excel חי ליד כל שאלה ({n(NX2)} גיליונות), עם בדיקה, רמזים ופתרון צעד אחר צעד.</span></span></a>
+</div></div>
+<div class="grp"><h5>2. אחרי השיעור, לחזרה</h5><div class="links">
+<a class="lk s" href="lectures/lecture-2/summary.pdf"><span class="e">📄</span><span><b>סיכום השיעור (PDF)</b><span class="d">כל תוכן המצגת במסמך אחד: הגדרות, השאלות והפתרון שלהן בגיליון, ומילון מושגים.</span></span></a>
+</div></div>
+<div class="grp"><h5>3. תרגול</h5><div class="links">
+<a class="lk x" href="materials/practice-2.xlsx" download><span class="e">📊</span><span><b>קובץ התרגול (Excel)</b><span class="d">כל {n(NX2)} השאלות של המצגת, באותן כתובות תאים. התאים הצהובים ריקים: כותבים בהם את הנתונים ואת הנוסחאות.</span></span></a>
+<a class="lk r" href="materials/practice-2-solutions.xlsx" download><span class="e">✅</span><span><b>קובץ הפתרונות (Excel)</b><span class="d">אותם גיליונות עם נוסחאות חיות. פותחים רק אחרי שפותרים.</span></span></a>
+</div></div>
+</div>
+</div>
+<div class="todo"><h4>📝 מה עושים בשיעור {n(2)}</h4><ol>
+<li><b>בשיעור:</b> עובדים במצגת, בגיליונות שבתוך השקפים.</li>
+<li><b>אחרי השיעור:</b> פותרים בקובץ התרגול את כל השאלות, בלי להסתכל בפתרונות. בסוף הקובץ: תרגיל מסכם על שתי תוכניות חיסכון.</li>
 <li><b>בדיקה:</b> רק אחרי שפתרתם, בקובץ הפתרונות. אין חובת הגשה.</li>
 </ol></div>
 </article>

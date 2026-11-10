@@ -28,9 +28,11 @@ h2.sec:before{content:"";flex:none;width:34px;height:5px;border-radius:5px;backg
 .lec-n{flex:none;width:64px;height:64px;border-radius:18px;background:var(--navy2);color:#fff;display:grid;place-items:center;font-size:30px;font-weight:800}
 .lec-head h3{font-size:26px;line-height:1.25;font-weight:800}
 .lec-head .sub{color:var(--mut);font-size:16px}
+.soon{color:var(--mut);font-size:17px;line-height:1.5}
+.draft{display:inline-block;background:#fff1c7;color:#8a5a00;border:1px solid #f0b429;border-radius:999px;font-size:13px;font-weight:800;padding:1px 10px;margin-right:6px;vertical-align:middle}
+.soon+.links{margin-top:8px}
 .lec-body{display:grid;grid-template-columns:1.1fr .9fr;gap:30px;padding:14px 30px 26px}
-.lec-body h4,.rec h4{font-size:18px;margin-bottom:8px;color:var(--navy2)}
-.learn{list-style:none}
+.lec-body h4,.learn{list-style:none}
 .learn li{padding:8px 20px 8px 0;position:relative;border-bottom:1px dashed var(--line);font-size:16.5px;line-height:1.45}
 .learn li:last-child{border:0}
 .learn li:before{content:"";position:absolute;right:0;top:17px;width:8px;height:8px;border-radius:50%;background:var(--coral)}
@@ -41,11 +43,6 @@ h2.sec:before{content:"";flex:none;width:34px;height:5px;border-radius:5px;backg
 .lk b{display:block;font-size:17px;line-height:1.25}
 .lk .d{font-size:14.5px;color:var(--mut);line-height:1.35;display:block}
 .lk.p .e{background:#ffe3dc}.lk.s .e{background:#dff5f2}
-.rec{padding:0 30px 30px}
-.recbox{position:relative;aspect-ratio:16/9;max-width:720px;margin-inline:auto;border-radius:16px;overflow:hidden;background:#0c1426}
-.recbox iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
-.recph{position:absolute;inset:0;display:grid;place-items:center;text-align:center;color:#b8c6e8;padding:20px}
-.recph b{display:block;color:#fff;font-size:20px;margin-bottom:4px}
 footer{margin-top:50px;padding:24px 0 34px;border-top:1px solid var(--line);color:var(--mut);font-size:15.5px}
 footer a{color:var(--navy2);font-weight:700;direction:ltr;unicode-bidi:isolate;display:inline-block}
 @media (max-width:760px){
@@ -56,9 +53,7 @@ footer a{color:var(--navy2);font-weight:700;direction:ltr;unicode-bidi:isolate;d
  .lec-n{width:50px;height:50px;font-size:24px;border-radius:14px}
  .lec-head h3{font-size:22px}
  .lec-body{grid-template-columns:minmax(0,1fr);gap:22px;padding:12px 18px 22px}
- .rec{padding:0 18px 22px}
- .recbox{aspect-ratio:4/3}
-}
+  }
 
 .cgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
 .cnote{font-size:15px;color:var(--mut);margin-top:8px}
@@ -160,8 +155,38 @@ footer a{color:var(--navy2);font-weight:700;direction:ltr;unicode-bidi:isolate;d
 <li><b>בדיקה:</b> רק אחרי שפתרתם, בקובץ הפתרונות. אין חובת הגשה.</li>
 </ol></div>
 </article>
+<article class="lec" id="lesson-2">
+<div class="lec-head"><div class="lec-n">2</div><div><h3>ערך עתידי של סדרה ומקרים מורכבים</h3><div class="sub">מפגש <span class="n">2</span></div></div></div>
+<div class="lec-body">
+<div><h4>מה לומדים בשיעור</h4><ul class="learn">
+<li>תזכורת למפגש 1: ערך, ריבית, FV של סכום יחיד וחישוב בשלבים</li>
+<li>ערך עתידי של סדרה: אותו סכום בכל תקופה, והארגומנטים pmt ו-type</li>
+<li>יעד מאוחר מההפקדה האחרונה: הסדרה, ואחריה צבירה</li>
+<li>ריבית שמשתנה והפקדות שמתחלפות: עמודה לכל מקטע</li>
+<li>חילוץ: כמה להפקיד בכל חודש, בפונקציה PMT</li>
+<li>תרגול עצמי ושאלות בית, כל אחת עם גיליון חי</li>
+</ul></div>
+<div><h4>חומרי השיעור</h4>
+<div class="grp"><h5>1. בשיעור</h5><div class="links">
+<a class="lk p" href="lectures/lecture-2/presentation.html"><span class="e">🖥️</span><span><b>מצגת השיעור</b><span class="d"><span class="n">49</span> שקפים, וגיליון Excel חי ליד כל שאלה (<span class="n">25</span> גיליונות), עם בדיקה, רמזים ופתרון צעד אחר צעד.</span></span></a>
+</div></div>
+<div class="grp"><h5>2. אחרי השיעור, לחזרה</h5><div class="links">
+<a class="lk s" href="lectures/lecture-2/summary.pdf"><span class="e">📄</span><span><b>סיכום השיעור (PDF)</b><span class="d">כל תוכן המצגת במסמך אחד: הגדרות, השאלות והפתרון שלהן בגיליון, ומילון מושגים.</span></span></a>
+</div></div>
+<div class="grp"><h5>3. תרגול</h5><div class="links">
+<a class="lk x" href="materials/practice-2.xlsx" download><span class="e">📊</span><span><b>קובץ התרגול (Excel)</b><span class="d">כל <span class="n">25</span> השאלות של המצגת, באותן כתובות תאים. התאים הצהובים ריקים: כותבים בהם את הנתונים ואת הנוסחאות.</span></span></a>
+<a class="lk r" href="materials/practice-2-solutions.xlsx" download><span class="e">✅</span><span><b>קובץ הפתרונות (Excel)</b><span class="d">אותם גיליונות עם נוסחאות חיות. פותחים רק אחרי שפותרים.</span></span></a>
+</div></div>
+</div>
+</div>
+<div class="todo"><h4>📝 מה עושים בשיעור <span class="n">2</span></h4><ol>
+<li><b>בשיעור:</b> עובדים במצגת, בגיליונות שבתוך השקפים.</li>
+<li><b>אחרי השיעור:</b> פותרים בקובץ התרגול את כל השאלות, בלי להסתכל בפתרונות. בסוף הקובץ: תרגיל מסכם על שתי תוכניות חיסכון.</li>
+<li><b>בדיקה:</b> רק אחרי שפתרתם, בקובץ הפתרונות. אין חובת הגשה.</li>
+</ol></div>
+</article>
 <h2 class="sec" style="margin-top:36px">השיעורים הבאים</h2>
-<ul class="ups"><li><span class="un"><span class="n">2</span></span><span>ערך עתידי של סדרה, מקרים מורכבים וחילוצים</span><em>בקרוב</em></li><li><span class="un"><span class="n">3-5</span></span><span>חישובי ערך נוכחי, ריבית ושווי</span><em>בקרוב</em></li><li><span class="un"><span class="n">6-7</span></span><span>הלוואות ולוחות סילוקין</span><em>בקרוב</em></li><li><span class="un"><span class="n">8-9</span></span><span>קריטריונים לבחינת כדאיות השקעות</span><em>בקרוב</em></li><li><span class="un"><span class="n">10-11</span></span><span>קיצוב הון ובניית תחזית תזרימי מזומנים לתכניות השקעה</span><em>בקרוב</em></li><li><span class="un"><span class="n">12</span></span><span>דיון אקטואלי: מקרה בוחן (Case Study) ומשמעות מעשית של פרספקטיבה פיננסית</span><em>בקרוב</em></li><li><span class="un"><span class="n">13</span></span><span>חזרה ודיון אינטגרטיבי</span><em>בקרוב</em></li></ul>
+<ul class="ups"><li><span class="un"><span class="n">3-5</span></span><span>חישובי ערך נוכחי, ריבית ושווי</span><em>בקרוב</em></li><li><span class="un"><span class="n">6-7</span></span><span>הלוואות ולוחות סילוקין</span><em>בקרוב</em></li><li><span class="un"><span class="n">8-9</span></span><span>קריטריונים לבחינת כדאיות השקעות</span><em>בקרוב</em></li><li><span class="un"><span class="n">10-11</span></span><span>קיצוב הון ובניית תחזית תזרימי מזומנים לתכניות השקעה</span><em>בקרוב</em></li><li><span class="un"><span class="n">12</span></span><span>דיון אקטואלי: מקרה בוחן (Case Study) ומשמעות מעשית של פרספקטיבה פיננסית</span><em>בקרוב</em></li><li><span class="un"><span class="n">13</span></span><span>חזרה ודיון אינטגרטיבי</span><em>בקרוב</em></li></ul>
 </section>
 <footer>ד״ר שי צבאן · פניות במייל: <a href="mailto:shay.tsaban@gmail.com">shay.tsaban@gmail.com</a>, עם שם המוסד ושם הקורס</footer>
 </main>

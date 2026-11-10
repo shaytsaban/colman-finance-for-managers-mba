@@ -127,12 +127,14 @@ for s, ev in zip(XSPECS, EV):
             if rel > 1e-9: errs.append((n, a, who, x, lo))
 print('sheets', len(XSPECS), 'formulas', nform, 'largest relative gap (python, engine vs LibreOffice)', f'{worst:.1e}', 'errors', errs[:10])
 print('rtl', all(FM[sname(s)].sheet_view.rightToLeft for s in XSPECS), '| charts', sum(len(FM[sname(s)]._charts) for s in XSPECS))
-KEY = {'q-1': ('C7', 57881.25), 'q-dand': ('D6', 76153.6325971544), 'q-valdi': ('E6', 169017.739749039), 'q-taltul': ('G6', -91625.2486808057), 'q-2': ('C6', -463709.62972)}
+KEY = {1: {'q-1': ('C7', 57881.25), 'q-dand': ('D6', 76153.6325971544), 'q-valdi': ('E6', 169017.739749039), 'q-taltul': ('G6', -91625.2486808057), 'q-2': ('C6', -463709.62972)},
+       # lesson 2: the answers as the coursebook prints them (sheet "Lecture 2"), to the cent where it gives cents
+       2: {'q-del': ('D6', 37150.96), 'q-tal2': ('C8', 22453.87), 'q-makd': ('C4', -4230.45), 'q-dean': ('F6', 157694.37), 't-1': ('C6', 152959.12), 'q-tal': ('E6', 173048.10), 'q-makc': ('C6', 136170.57)}}[LESSON]
 for s in XSPECS:
     if s['sid'] in KEY:
         a, e = KEY[s['sid']]; v = V[sname(s)][a].value
-        assert abs(v - e) < 1e-6, (s['sid'], a, v, e)
-print('key answers match the coursebook (Lecture 1):', len(KEY))
+        assert abs(v - e) < 0.006, (s['sid'], a, v, e)
+print(f'key answers match the coursebook (Lecture {LESSON}):', len(KEY))
 assert not errs
 shutil.copy(rec, raw)   # ship the recalculated copy, so values also show in Protected View
 shutil.rmtree(d, True)
