@@ -14,6 +14,14 @@ assert round(_fin.FV(0.01, 24, 0, -_fin.FV(0.01, 12, -100, 0)), 2) == 1610.34
 assert round(_fin.FV(0.01, 12, 0, -_fin.FV(0.01, 60, -1000, -30000)), 2) == 153440.41
 
 
+# ---------------------------------------------------------------- drawings of this lesson (original, drawn here)
+TOONS.update({
+ 'hotdog': '<ellipse cx="60" cy="74" rx="50" ry="22" fill="#e8b45a" stroke="#a86703" stroke-width="3"/><rect x="8" y="50" width="104" height="26" rx="13" fill="#c4421f"/><path d="M20 58q8-8 16 0t16 0t16 0t16 0t16 0" fill="none" stroke="#ffd37a" stroke-width="4" stroke-linecap="round"/><circle cx="46" cy="86" r="3.5" fill="#111"/><circle cx="74" cy="86" r="3.5" fill="#111"/><path d="M50 94q10 7 20 0" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round"/><path d="M40 30q4-8 0-14M60 28q4-8 0-14M80 30q4-8 0-14" fill="none" stroke="#8a93aa" stroke-width="3" stroke-linecap="round"/>',
+ 'car': '<path d="M14 78q0-16 14-18l10-22q3-6 10-6h30q7 0 10 6l10 22q12 2 12 18v12H14z" fill="#27447f"/><path d="M42 40h36l8 18H34z" fill="#dff5f2"/><circle cx="38" cy="92" r="12" fill="#111"/><circle cx="38" cy="92" r="5" fill="#8a93aa"/><circle cx="86" cy="92" r="12" fill="#111"/><circle cx="86" cy="92" r="5" fill="#8a93aa"/><circle cx="24" cy="72" r="5" fill="#ffd37a"/><circle cx="100" cy="72" r="5" fill="#ffd37a"/><path d="M52 76q8 6 18 0" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>',
+ 'pause': '<circle cx="60" cy="62" r="42" fill="#fff" stroke="#1b2d55" stroke-width="5"/><rect x="42" y="42" width="12" height="40" rx="4" fill="#ff6a4d"/><rect x="66" y="42" width="12" height="40" rx="4" fill="#ff6a4d"/><text x="92" y="26" font-size="26" font-weight="800" fill="#5d6a86">z</text><text x="106" y="14" font-size="24" font-weight="800" fill="#5d6a86">z</text>',
+ 'calendar': '<rect x="18" y="22" width="84" height="84" rx="10" fill="#fff" stroke="#1b2d55" stroke-width="4"/><rect x="18" y="22" width="84" height="24" rx="10" fill="#ff6a4d"/><path d="M38 14v16M82 14v16" stroke="#1b2d55" stroke-width="6" stroke-linecap="round"/><circle cx="46" cy="66" r="4" fill="#111"/><circle cx="74" cy="66" r="4" fill="#111"/><path d="M46 74q14 10 28 0" fill="none" stroke="#111" stroke-width="3.5" stroke-linecap="round"/><text x="60" y="103" font-size="24" font-weight="800" fill="#0f9d90" text-anchor="middle">₪</text>',
+})
+
 def TLC(ticks, flows=None, marks=None, brace=None, W=410, fs=17):
     """A timeline in its own card, under a question. A named value (FV₃) sits above its time point;
     where a deposit already holds that place, the name moves under the axis, as a dot."""
@@ -149,15 +157,15 @@ S('s-3g', 'נגה על ציר הזמן', 'שאלה חדשה: נגה מפקידה
 _d = {'A1': 'סכום ההפקדה', 'B1': 'מועד: סוף שנה', 'C1': 'שנים עד סוף שנה 3', 'D1': 'ערך בסוף שנה 3',
       'A2': 1000, 'B2': 1, 'A3': 1000, 'B3': 2, 'A4': 1000, 'B4': 3, 'A6': 'ריבית שנתית', 'B6': 0.1, 'A7': 'סך הכול בסוף שנה 3'}
 _s = {'C2': '=3-B2', 'C3': '=3-B3', 'C4': '=3-B4', 'D2': '=A2*(1+$B$6)^C2', 'D3': '=A3*(1+$B$6)^C3', 'D4': '=A4*(1+$B$6)^C4', 'D7': '=SUM(D2:D4)'}
-QX('x-3dep', 'נגה באקסל, דרך א', 'נגה: כל הפקדה בשורה משלה', _NOGA + ['חשבו כל הפקדה בנפרד, כמו על ציר הזמן, וחברו.'],
+QX('x-3dep', 'נגה באקסל, דרך א', 'נגה: כל הפקדה בשורה משלה', _NOGA,
    'שורה לכל הפקדה: כמה שנים היא צוברת, ומה ערכה בסוף שנה 3. בשורה 7: הסכום.',
    _d, _s, [150, 120, 150, 140], [1], fmt={'A2': 'num0', 'A3': 'num0', 'A4': 'num0', 'B6': 'pct0', 'D2': 'num2', 'D3': 'num2', 'D4': 'num2', 'D7': 'num2'},
+   qmc=MEME('ומה עם 48 הפקדות?', [('sweat', 'דרך א: 48 שורות'), ('robot', 'דרך ב: פונקציה אחת')], 0, 'sm'),
    hints=['ההפקדה של סוף שנה 1 צוברת ריבית שנתיים: =3-B2. של סוף שנה 3 לא צוברת בכלל.', 'ערך של הפקדה: =A2*(1+¤B¤6)^C2, וגוררים למטה.'], remind='=A2*(1+¤B¤6)^C2', partial=['C2'],
    traps={'D4': [('=A4*(1+$B$6)^1', 'ההפקדה של סוף שנה 3 מגיעה ביום היעד עצמו, ולא צוברת ריבית: 0 שנים.')]},
    steps=[dict(cells={'C2': '=3-B2'}, note='<b>ההפקדה הראשונה:</b> מסוף שנה 1 עד סוף שנה 3 עוברות שנתיים.'), dict(cells={'C3': '=3-B3'}, note='<b>ההפקדה השנייה:</b> שנה אחת.'), dict(cells={'C4': '=3-B4'}, note='<b>ההפקדה השלישית:</b> 0 שנים. היא מגיעה ביום היעד.'),
           dict(cells={'D2': '=A2*(1+$B$6)^C2'}, note='ההפקדה הראשונה כסכום יחיד, שנתיים ב-10%: 1,210.'), dict(cells={'D3': '=A3*(1+$B$6)^C3'}, note='ההפקדה השנייה, שנה אחת: 1,100.'), dict(cells={'D4': '=A4*(1+$B$6)^C4'}, note='ההפקדה השלישית, בלי ריבית: 1,000.'),
           dict(cells={'D7': '=SUM(D2:D4)'}, note='מחברים: 3,310 ש״ח בסוף שנה 3.')],
-   note=[('note', 'זה עובד, אבל ב-48 הפקדות צריך 48 שורות. לכן יש דרך ב: פונקציה אחת.', 1)],
    done='3,310 ש״ח: 1,210 + 1,100 + 1,000.', xtitle='נגה, דרך א: הפקדה אחר הפקדה')
 
 _d, _s, _f, _o = fvt([dict(h='החיסכון של נגה', rate=0.1, nper=3, pmt=-1000, pv=0)])
@@ -259,6 +267,7 @@ _s['D6'] = '=FV(D2,D3,D4,D5,1)'
 QX('q-avner', 'שאלה 6 מהמחברת', 'אבנר: סדרה קטנה וסכום של היום', ['אבנר רוצה להפקיד בתום כל חודש, במשך 15 שנים, 50 ש״ח, ובנוסף להפקיד היום סכום חד פעמי של 10,000 ש״ח. הריבית החודשית בחיסכון 0.1%.', '<b>נדרש א:</b> כמה יעמוד לרשותו בתום 15 השנים?', '<b>נדרש ב:</b> כמה יעמוד לרשותו, אם יפקיד בתחילת כל חודש?'],
    'עמודה C: הפקדה בסוף החודש. עמודה D: אותם נתונים, ו-type של 1.',
    _d, _s, [140, 50, 120, 120], [1], fmt=_f,
+   qmc=MEME('50 ש״ח בחודש', [('tinycoin', 'סכום שלא מרגישים'), ('coins', '15 שנה, ועם ה-10,000: 21,826')], 0, 'sm'),
    hints=['nper: 180 הפקדות, =15*12. rate: 0.1% לחודש.', 'סעיף ב: הארגומנט החמישי הוא 1, =FV(D2,D3,D4,D5,1).'], remind='=FV(C2,C3,C4,C5)   =FV(D2,D3,D4,D5,1)', partial=['C6'],
    traps={'D6': [('=FV(D2,D3,D4,D5)', 'בלי type, Excel מניח הפקדה בסוף החודש. בתחילת החודש: הארגומנט החמישי הוא 1.')]},
    steps=[dict(cells={'C6': '=FV(C2,C3,C4,C5)'}, note='סעיף א: 21,826.58.'), dict(cells={'D6': '=FV(D2,D3,D4,D5,1)'}, note='סעיף ב: 21,836.44. כל הפקדה צוברת עוד חודש.')],

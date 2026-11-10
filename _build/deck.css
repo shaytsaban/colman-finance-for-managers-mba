@@ -453,3 +453,5 @@ svg .st.show .ring{animation:xlring 1.6s ease-out 1s 2}
 .tl2h{font-size:20px;font-weight:800;color:var(--navy2);margin:0 0 2px}
 .tl2h small{font-weight:600;color:#5d6a86;font-size:16.5px}
 .bigsum{font-size:24px;font-weight:800;color:var(--navy2);text-align:center;direction:ltr;padding:6px 0}
+.meme .mcap{font-size:17px}
+.meme.sm .mcap{font-size:16.5px}
