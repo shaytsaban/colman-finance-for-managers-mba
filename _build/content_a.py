@@ -6,7 +6,7 @@ COURSE = 'מימון למנהלות ומנהלים'
 INST = 'המסלול האקדמי המכללה למנהל · MBA'
 SEM = 'סמסטר א׳ תשפ״ז'
 LESSON = globals().get('LESSON', 1)
-TOTAL_PARTS = {1: 6, 2: 7}[LESSON]
+TOTAL_PARTS = {1: 6, 2: 8}[LESSON]
 # per lesson: deck title, subtitle, chips, cover line and the next meeting. The first meeting date is not in the source files.
 LMETA = {
  1: dict(date='', h1=('מבוא למימון:', 'מטרת הפירמה וערך עתידי'), title='מבוא למימון וערך עתידי',
@@ -338,6 +338,76 @@ def _argnames(data, sol, head):
     return data
 
 
+ROLE = {'rate': 'הריבית לתקופה אחת. בסדרה: לתקופת התשלום', 'nper': 'מספר התקופות. בסדרה: מספר התשלומים', 'pmt': 'התשלום הקבוע בכל תקופה',
+        'pv': 'הסכום החד פעמי בתחילת השלב', 'fv': 'הערך העתידי'}
+
+
+def _one_cell_steps(data, inputs, given_f, steps, head, fmt):
+    """Shay, 2026-11-10: ״צעד אחר צעד״ must really be one step at a time. Every click writes one cell: first each number of the question,
+    in the order of the table, with what the cell means; then each formula. A written step that fills several cells is split, and its
+    note stays on its last cell."""
+    typed = {**inputs, **given_f}
+    def rc(a):
+        m = re.match(r'([A-Z]+)(\d+)', a); return m.group(1), int(m.group(2))
+    def text(a):
+        v = data.get(a); return v if isinstance(v, str) and not v.startswith('=') else ''
+    def num(a):
+        r = typed.get(a, '')
+        try: return float(r[:-1]) / 100 if r.endswith('%') else float(r)
+        except ValueError: return None
+    multi = len({rc(a)[0] for a in typed if rc(a)[0] > 'B'}) > 1
+    def label(a):
+        col, row = rc(a)
+        name = text(f'B{row}') if col > 'B' else ''
+        lab = text(f'A{row}') if col > 'A' else ''
+        hd = [text(f'{col}{h}') for h in head if h < row and text(f'{col}{h}')]
+        if not lab: return (hd[-1] if hd else a), ''
+        lab = re.sub(r'\s*\((rate|nper|pmt|pv|fv)\)$', '', lab)
+        return (f'{hd[-1]}, {lab}' if hd and multi and name in ROLE else lab), (name if name in ROLE else '')
+    def has_pmt(a):
+        col, row = rc(a)
+        pr = [r for r in range(1, 40) if text(f'B{r}') == 'pmt']
+        v = num(f'{col}{pr[0]}') if pr else None
+        return bool(v)
+    def note_in(a):
+        lab, name = label(a); raw = typed[a]; v = num(a)
+        t = f'<b>{lab}' + (f' ({name})' if name else '') + ':</b> כותבים ' + XL(raw) + '.'
+        if name == 'pmt': t += ' אין הפקדה קבועה בשלב הזה.' if v == 0 else (' ההפקדה הקבועה. הכסף יוצא, ולכן במינוס.' if v is not None and v < 0 else ' תשלום קבוע שמתקבל: בפלוס.')
+        elif name == 'pv': t += ' אין סכום חד פעמי בתחילת הדרך.' if v == 0 else (' סכום חד פעמי שמופקד: הכסף יוצא, ולכן במינוס.' if v is not None and v < 0 else ' סכום שמתקבל היום: בפלוס.')
+        elif name == 'rate': t += (' יש הפקדות, ולכן זו הריבית לתקופת תשלום.' if has_pmt(a) else ' הריבית הנתונה, לתקופה אחת.') + ' אחוזים כותבים עם סימן האחוז.'
+        elif name == 'nper': t += (' יש הפקדות, ולכן זה מספר ההפקדות.' if has_pmt(a) else ' מספר תקופות הריבית, באותה יחידה כמו rate.') + (' ההמרה נכתבת כנוסחה.' if a in given_f else '')
+        elif name == 'fv': t += ' הסכום העתידי נתון הפעם.'
+        return t
+    def note_f(a, f):
+        lab, name = label(a)
+        if re.fullmatch(r'=-[A-Z]+\d+', f): return f'<b>{lab}' + (f' ({name})' if name else '') + ':</b> ' + XL(f) + '. ה-FV של השלב הקודם נכנס לכאן בסימן הפוך: הוא שוב הפקדה.'
+        return f'<b>{lab}:</b> כותבים ' + XL(f.replace('$', '¤')) + '.'
+    out, done = [], set()
+    order = sorted(typed, key=lambda a: (rc(a)[0], rc(a)[1]))
+    def enter(pred):
+        for a in order:
+            if a not in done and pred(a):
+                done.add(a); out.append(dict(cells={a: typed[a]}, note=note_in(a), sel=a))
+    for st in steps:
+        cols = {rc(a)[0] for a in st['cells']}
+        refs = set(re.findall(r'\$?([A-Z]{1,2})\$?(\d+)', ' '.join(str(f) for f in st['cells'].values())))
+        need = {c + r for c, r in refs}
+        # ranges (D2:D4) count too
+        for c1, r1, c2, r2 in re.findall(r'([A-Z])(\d+):([A-Z])(\d+)', ' '.join(str(f) for f in st['cells'].values())):
+            need |= {chr(c) + str(r) for c in range(ord(c1), ord(c2) + 1) for r in range(int(r1), int(r2) + 1)}
+        enter(lambda a: rc(a)[0] in cols and rc(a)[0] > 'B' and text(f'B{rc(a)[1]}') in ROLE or a in need)
+        ks = list(st['cells'])
+        if st.get('sel2'):           # one formula dragged over a range stays one step: that is how it is done in Excel
+            out.append(st); continue
+        for k in ks[:-1]:
+            out.append(dict(cells={k: st['cells'][k]}, note=note_f(k, str(st['cells'][k])), sel=k))
+        out.append(dict(cells={ks[-1]: st['cells'][ks[-1]]}, note=st['note'], sel=ks[-1]))
+    if len(done) < len(order):   # a number no formula step asked for: entered first
+        rest = [dict(cells={a: typed[a]}, note=note_in(a), sel=a) for a in order if a not in done]
+        out = rest + out
+    return out
+
+
 def _xsheet(sid, task, data, sol, widths, head, rows=None, cols=None, hints=None, remind=None, partial=None, chart=None, values=False, done='', extra='',
             fmt=None, traps=None, allow=None, r0=1, maxh=None, tol=None, need=None, needMsg=None, xname=None, xtitle=None, steps=None, side=False, title='', signMsg=None, qtext=None, build=None):
     """The live sheet itself. side=True: the sheet sits beside a question, and its feedback goes under the question (an element .xfb)."""
@@ -357,7 +427,9 @@ def _xsheet(sid, task, data, sol, widths, head, rows=None, cols=None, hints=None
     data = {a: v for a, v in data.items() if a not in inputs and a not in given_f}
     sol = {**inputs, **given_f, **sol}
     data = _argnames(dict(data), sol, head)
-    if steps:
+    if steps and MODE == 'deck':
+        steps = _one_cell_steps(data, inputs, given_f, steps, head, fmt)
+    elif steps:   # the summary keeps the short form: the data, the period conversions, then each formula
         steps = ([dict(cells=dict(inputs), note='מזינים את נתוני השאלה בתאים, כפי שהם כתובים בשאלה. אחוזים כותבים עם סימן האחוז.', sel=next(iter(inputs)))] if inputs else []) + \
                 ([dict(cells=dict(given_f), note='התאמות לתקופה: ' + ' '.join(f'{a}: {f}' for a, f in given_f.items()))] if given_f else []) + steps
     partial = list(inputs) + list(given_f) + list(partial or [a for a in sol if a not in inputs and a not in given_f][:1])
@@ -388,7 +460,12 @@ def _xsheet(sid, task, data, sol, widths, head, rows=None, cols=None, hints=None
             fm = '<p class="fml">' + ' '.join(f'<span class="fx"><b>{a}</b> ' + XL(sol[a].replace('$', '¤')) + '</span>' for a in _repr_targets(sol)) + '</p>'
         return f'<p class="qstem">{TX(task)}</p><table class="tbl2 xlp">{hdr}{t}</table>{fm}'
     NACT[0] += 1
-    cfgd = dict(rows=rs, cols=cs, widths=widths, data={k: str(v) for k, v in data.items()}, targets=targets, solution=sol, headRows=head, inputs=[], fmt=fmt, solFmt=fmt,
+    # Shay, 2026-11-10: use the screen. The live sheet shows spare empty rows and columns, as a full Excel window does; the slide fit
+    # caps its height to the free space, and scrolling reaches the spare rows. The spec (and the workbooks) keep the real size.
+    real_w = sum(widths) + max(0, cs - len(widths)) * 92
+    pad_c = max(0, int(((560 if side else 760) - real_w - 50) // 80))
+    widths = list(widths) + [92] * max(0, cs - len(widths)) + [80] * pad_c
+    cfgd = dict(rows=rs + 14, cols=cs + pad_c, widths=widths, data={k: str(v) for k, v in data.items()}, targets=targets, solution=sol, headRows=head, inputs=[], fmt=fmt, solFmt=fmt,
                 hints=[TX(FXW(x)) for x in (hints or ['קראו שוב את כותרת העמודה, וכתבו את החישוב במילים לפני הנוסחה.'])], remind=TX(FXW(remind or '')), partial=partial or targets[:1], values=values, done=TX(FXW(done)))
     if not remind: cfgd.pop('remind')
     if traps: cfgd['traps'] = {a: [[f, TX(FXW(m))] for f, m in L] for a, L in traps.items()}
@@ -429,7 +506,9 @@ def QX(sid, tag, title, stem, task, data, sol, widths, head, note=None, qmc='', 
     """A question beside the live sheet in which it is solved. No algebra: the steps are formulas in the sheet."""
     head_t = f'{tag}: {title}' if tag else title
     stem_html = ''.join(f'<p>{TX(x)}</p>' for x in stem)
-    notes = ''.join(BAND(*x) if MODE == 'deck' else BAND(x[0], x[1]) for x in (note or []))   # (kind, text) or (kind, text, click): revealed beside the sheet
+    # a timeline under the question builds click by click; the notes come after its last click
+    off = max([int(x) // 10 for x in re.findall(r'data-n="(\d+)"', qmc)] or [0])
+    notes = ''.join(BAND(x[0], x[1], x[2] + off) if MODE == 'deck' and len(x) > 2 else BAND(x[0], x[1]) for x in (note or []))   # (kind, text) or (kind, text, click): revealed beside the sheet
     r = _xsheet(sid, task, data, sol, widths, head, side=True, title=head_t, qtext=' '.join(re.sub('<[^>]+>', '', x) for x in stem), **kw)
     if MODE == 'pdf':
         S(sid, head_t, head_t, f'<div class="qstem">{stem_html}</div>{qmc}{r}{notes}', kind='q'); return
@@ -497,5 +576,5 @@ def RL(items, start=1):
 
 
 exec(R('content_g.py'))
-for _f in ['content_fv.py'] + {1: ['content_l1a.py', 'content_l1b.py', 'content_l1c.py'], 2: ['content_l2a.py', 'content_l2b.py']}[LESSON]:
+for _f in ['content_fv.py'] + {1: ['content_l1a.py', 'content_l1b.py', 'content_l1c.py'], 2: ['content_l2a.py', 'content_l2b.py', 'content_l2c.py']}[LESSON]:
     exec(R(_f))

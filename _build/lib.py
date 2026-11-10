@@ -146,10 +146,16 @@ def _st(s):
     return f' class="st" data-n="{s * 10}"' if s else ''
 
 
-def TL(ticks, flows=None, moves=None, brace=None, marks=None, W=560, fs=17, fh=46):
+def TL(ticks, flows=None, moves=None, brace=None, marks=None, W=560, fs=17, fh=46, seq=0):
     """Timeline as inline SVG, time running left to right.
     ticks: labels in order ('...' draws dots). flows: {tick: label or ''}. moves: dicts a, b, t (caption), s (reveal step).
-    brace: (from, to, label, step). marks: {tick: label}, a dotted line up to a bold label."""
+    brace: (from, to, label, step). marks: {tick: label}, a dotted line up to a bold label.
+    seq=n builds the timeline click by click from step n: the axis, then every flow, every brace, every mark and every move, each on its own click.
+    TL.last holds the last step used (0 when seq is 0)."""
+    k = [seq]
+    def nx():
+        if not seq: return 0
+        k[0] += 1; return k[0] - 1
     flows, moves, brace, marks = flows or {}, moves or [], brace or [], marks or {}
     n = len(ticks)
     left, right = 28, W - 40
@@ -166,6 +172,10 @@ def TL(ticks, flows=None, moves=None, brace=None, marks=None, W=560, fs=17, fh=4
     ay = y                        # arrow tips
     y0 = ay + fh                  # axis
     p = []
+    ax0 = nx()
+    fl_n = [nx() for _ in flows]; br_n = [nx() for _ in brace]; mk_n = [nx() for _ in marks]; mv_n = [nx() for _ in moves]
+    TL.last = k[0] - 1 if seq else 0
+    p.append(f'<g{_st(ax0)}>' if ax0 else '')
     p.append(f'<line x1="6" y1="{y0}" x2="{W - 12}" y2="{y0}" stroke="#1b2d55" stroke-width="2.6"/><polygon points="{W - 4},{y0} {W - 17},{y0 - 6} {W - 17},{y0 + 6}" fill="#1b2d55"/>')
     for i, l in enumerate(ticks):
         x = left + i * dx            # by position: a timeline may hold '...' more than once
@@ -175,22 +185,26 @@ def TL(ticks, flows=None, moves=None, brace=None, marks=None, W=560, fs=17, fh=4
             continue
         p.append(f'<line x1="{x:.1f}" y1="{y0 - 6}" x2="{x:.1f}" y2="{y0 + 6}" stroke="#1b2d55" stroke-width="2.2"/>')
         p.append(_txt(x, y0 + fs + 6, str(l), fs, W, weight=600))
-    for k, lab in flows.items():
-        x = X[str(k)]
+    p.append('</g>' if ax0 else '')
+    for j, (kk, lab) in enumerate(flows.items()):
+        x = X[str(kk)]
+        p.append(f'<g{_st(fl_n[j])}>')
         p.append(f'<line x1="{x:.1f}" y1="{y0}" x2="{x:.1f}" y2="{ay + 8}" stroke="#ff6a4d" stroke-width="3"/><polygon points="{x:.1f},{ay} {x - 5.5:.1f},{ay + 11} {x + 5.5:.1f},{ay + 11}" fill="#ff6a4d"/>')
         if lab: p.append(_txt(x, ly, lab, fs - 1, W, fill='#b8391f', weight=700))
-    for k, lab in marks.items():
-        x = X[str(k)]
-        p.append(f'<line x1="{x:.1f}" y1="{y0}" x2="{x:.1f}" y2="{ly + 5}" stroke="#16213a" stroke-width="1.6" stroke-dasharray="2 4"/>')
-        p.append(_txt(x, ly, lab, fs, W, weight=800))
-    for b in brace:
+        p.append('</g>')
+    for j, (kk, lab) in enumerate(marks.items()):
+        x = X[str(kk)]
+        p.append(f'<g{_st(mk_n[j])}><line x1="{x:.1f}" y1="{y0}" x2="{x:.1f}" y2="{ly + 5}" stroke="#16213a" stroke-width="1.6" stroke-dasharray="2 4"/>')
+        p.append(_txt(x, ly, lab, fs, W, weight=800) + '</g>')
+    for j, b in enumerate(brace):
         a, c, lab = b[0], b[1], b[2]
-        s = b[3] if len(b) > 3 else 0
+        s = b[3] if len(b) > 3 else br_n[j]
         xa, xc = X[str(a)], X[str(c)]
         yb = by + 2
         p.append(f'<g{_st(s)}><path d="M{xa:.1f} {yb + 10} V{yb + 2} H{xc:.1f} V{yb + 10}" fill="none" stroke="#5d6a86" stroke-width="1.8"/>{_txt((xa + xc) / 2, by - 2, lab, fs - 1, W, fill="#2a3858", weight=600)}</g>')
     ym = y0 + fs + 24
-    for m in moves:
+    for j, m in enumerate(moves):
+        if seq and not m.get('s'): m = dict(m, s=mv_n[j])
         xa, xb = X[str(m['a'])], X[str(m['b'])]
         fwd = xb >= xa
         if xa == xb:
