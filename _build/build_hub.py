@@ -121,7 +121,7 @@ page = f'''<!doctype html>
 </ol></div>
 </article>
 <article class="lec" id="lesson-2">
-<div class="lec-head"><div class="lec-n">2</div><div><h3>ערך עתידי של סדרה ומקרים מורכבים</h3><div class="sub">מפגש {n(2)}</div></div></div>
+<div class="lec-head"><div class="lec-n">2</div><div><h3>ערך עתידי של סדרה ומקרים מורכבים</h3><div class="sub">מפגש {n(2)} · {n("12.11.2026")}</div></div></div>
 <div class="lec-body">
 <div><h4>מה לומדים בשיעור</h4><ul class="learn">
 <li>תזכורת למפגש 1: ערך, ריבית, FV של סכום יחיד וחישוב בשלבים</li>
