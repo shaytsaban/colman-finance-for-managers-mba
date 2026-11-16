@@ -142,6 +142,18 @@ cover = (f'<div class="cover"><div class="c-top">{INST}</div><div class="c-title
          '<div class="c-meta">' + TX((f'מפגש {LMETA["date"]}' if LMETA['date'] else f'מפגש {LESSON}') + ' · ' + SEM) + '<br>' + TX('כל הגדרות השיעור, הדוגמאות, פתרונות הפעילויות, השאלות עם הפתרון בגיליון ומילון המושגים.') + '</div>'
          '<div class="c-author"><div class="c-name">ד״ר שי צבאן</div><div class="c-mail" dir="ltr">shay.tsaban@gmail.com</div></div></div>')
 toc = '<div class="toc"><h1>תוכן העניינים</h1><ol>' + ''.join(f'<li>{parts[n][0]["h"]}</li>' for n in range(1, TOTAL_PARTS + 1)) + '</ol></div>'
+# lesson 3 diagrams, in print form
+CSS += """
+.bridge{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:6px 0}.bst{border:1px solid #c8cfde;border-radius:6px;padding:6px 8px}.bst h5{margin:2px 0;font-size:12pt}.bst .when{font-weight:bold;color:#0f6b62}.bst svg{max-height:62px}.bst ul{margin:2px 0;padding-inline-start:16px}
+.segbar{display:flex;direction:ltr;margin:6px 0}.segbar>div{border:1px solid #777;padding:4px 2px;text-align:center;direction:rtl;font-size:10pt;font-weight:bold}.segbar small{display:block;font-weight:normal}
+.yearrow{display:grid;grid-template-columns:repeat(12,1fr);gap:2px;direction:ltr;margin:4px 0}.yearrow>div{border:1px solid #777;text-align:center;font-size:8.5pt;padding:2px 0}
+.yrsum{text-align:center;direction:ltr;font-weight:bold}
+.swap{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;margin:6px 0}.swap .side{border:1px solid #c8cfde;border-radius:6px;padding:6px 8px}.swap .side h5{margin:2px 0;font-size:12pt}.swap .mid{align-self:center;font-weight:bold}
+.offer{border:1px solid #27447f;border-radius:6px;padding:6px 8px;margin:4px 0}.offer h6{margin:0 0 4px;font-size:11pt}.offer h6 em{font-style:normal;font-weight:normal;font-size:9pt;margin-inline-start:8px}.offer .row2{display:flex;justify-content:space-between}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 6px}.frac span:first-child{border-bottom:1px solid #000;padding:0 6px}
+.morep{color:#444}
+.tpl4{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tpl{border:1px solid #c8cfde;border-radius:6px;padding:6px 8px}.tpl h5{margin:2px 0;font-size:12pt}.tpl h5 em{font-style:normal;font-weight:normal;font-size:10pt;margin-inline-start:8px}.tpl svg{max-height:70px}
+"""
 page = (f'<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><title>{COURSE} | שיעור {LESSON} | סיכום</title><style>{CSS}</style></head><body>{cover}{toc}{body}</body></html>').replace('¤', '$')
 for bad in ('—', '־'):
     assert bad not in page, bad

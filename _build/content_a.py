@@ -6,7 +6,7 @@ COURSE = 'מימון למנהלות ומנהלים'
 INST = 'המסלול האקדמי המכללה למנהל · MBA'
 SEM = 'סמסטר א׳ תשפ״ז'
 LESSON = globals().get('LESSON', 1)
-TOTAL_PARTS = {1: 6, 2: 7, 3: 2}[LESSON]
+TOTAL_PARTS = {1: 6, 2: 7, 3: 7}[LESSON]
 # per lesson: deck title, subtitle, chips, cover line and the next meeting. The first meeting date is not in the source files.
 LMETA = {
  1: dict(date='', h1=('מבוא למימון:', 'מטרת הפירמה וערך עתידי'), title='מבוא למימון וערך עתידי',
@@ -17,8 +17,10 @@ LMETA = {
          sub='הפקדה קבועה בכל תקופה, הפקדה בתחילת התקופה או בסופה, יעד מאוחר מההפקדה האחרונה, וריבית שמשתנה באמצע הסדרה.', chip='כל שאלה נפתרת ב-Excel',
          cover='תזכורת למפגש 1, ערך עתידי של סדרה והארגומנט pmt, הארגומנט type, יעד מאוחר מההפקדה האחרונה, ריבית שמשתנה באמצע סדרה, תרגול עצמי עם פתרון מלא, וסיכום תהליכי העבודה בתרשימי זרימה.',
          next_h='מקטעים מורכבים וחילוץ ההפקדה', next_t='ממשיכים מהמקום שעצרנו: סדרה ואחריה ריבית ביחידה אחרת, שלושה מקטעים, הפסקה בהפקדות, וכמה להפקיד בכל חודש כדי להגיע ליעד. אחר כך: התאמת ריבית.'),
- # lesson 3 is a parking file for now (content_l3a.py): not built, not published
- 3: dict(date='', h1=('מקטעים מורכבים', 'וחילוץ ההפקדה'), title='מקטעים מורכבים וחילוץ', sub='יעודכן.', chip='כל שאלה נפתרת ב-Excel', cover='יעודכן.', next_h='יעודכן', next_t='יעודכן.')}[LESSON]
+ 3: dict(date='', h1=('מקטעים, חילוץ ההפקדה', 'והתאמת ריבית'), title='מקטעים, חילוץ ההפקדה והתאמת ריבית',
+         sub='ממשיכים מהמקום שעצרנו: מקטעים מסוגים שונים, והפסקה. אחר כך הופכים את השאלה: כמה להפקיד כדי להגיע ליעד. ולבסוף: ריבית שנתונה לתקופה אחרת מתקופת התשלום.', chip='כל שאלה נפתרת ב-Excel',
+         cover='חיבור למפגשים 1 ו-2, מקטעים מורכבים והפסקה בהפקדות, חילוץ ההפקדה בפונקציה PMT, התאמת ריבית נקובה ואפקטיבית לתקופת התשלום, סכום חד פעמי באמצע הדרך, תרגול עצמי עם פתרון מלא, וסיכום תהליכי העבודה בתרשימי זרימה.',
+         next_h='חילוץ מספר התקופות וחילוץ הריבית', next_t='כמה זמן צריך לחסוך כדי להגיע ליעד (הפונקציה NPER), ואיזו ריבית מגולמת בעסקה (הפונקציה RATE).')}[LESSON]
 XSPECS = []        # every live sheet, in deck order: the practice workbooks are built from these
 SL = []            # every slide, in order
 CUR = [None]       # current part number
@@ -41,7 +43,7 @@ def DEF(name, text, demo, n=0, trm=None, cls=''):
 
 
 def BAND(kind, text, n=0):
-    lab = {'dg': 'דגש', 'trap': 'המלכודת', 'note': 'הערה'}.get(kind, '')
+    lab = {'dg': 'דגש', 'trap': 'המלכודת', 'note': 'הערה', 'tip': 'טיפ'}.get(kind, '')
     inner = (f'<b>{lab}:</b> ' if lab else '') + TX(text)
     return ST(n, inner, cls='band ' + kind) if n else f'<div class="band {kind}">{inner}</div>'
 
@@ -344,7 +346,7 @@ ROLE = {'rate': 'הריבית לתקופה אחת. בסדרה: לתקופת הת
         'pv': 'הסכום החד פעמי בתחילת השלב', 'fv': 'הערך העתידי'}
 
 
-def _one_cell_steps(data, inputs, given_f, steps, head, fmt):
+def _one_cell_steps(data, inputs, given_f, steps, head, fmt, inotes=None):
     """Shay, 2026-11-10: ״צעד אחר צעד״ must really be one step at a time. Every click writes one cell: first each number of the question,
     in the order of the table, with what the cell means; then each formula. A written step that fills several cells is split, and its
     note stays on its last cell."""
@@ -372,12 +374,14 @@ def _one_cell_steps(data, inputs, given_f, steps, head, fmt):
         v = num(f'{col}{pr[0]}') if pr else None
         return bool(v)
     def note_in(a):
+        if inotes and a in inotes: return inotes[a]
         lab, name = label(a); raw = typed[a]; v = num(a)
         t = f'<b>{lab}' + (f' ({name})' if name else '') + ':</b> כותבים ' + XL(raw) + '.'
         if name == 'pmt': t += ' אין הפקדה קבועה בשלב הזה.' if v == 0 else (' ההפקדה הקבועה. הכסף יוצא, ולכן במינוס.' if v is not None and v < 0 else ' תשלום קבוע שמתקבל: בפלוס.')
         elif name == 'pv': t += ' אין סכום חד פעמי בתחילת הדרך.' if v == 0 else (' סכום חד פעמי שמופקד: הכסף יוצא, ולכן במינוס.' if v is not None and v < 0 else ' סכום שמתקבל היום: בפלוס.')
+        elif name == 'rate' and a in given_f: t += ' הריבית הנתונה היא לתקופה אחרת מתקופת התשלום, ולכן ממירים אותה בתוך התא.'
         elif name == 'rate': t += (' יש הפקדות, ולכן זו הריבית לתקופת תשלום.' if has_pmt(a) else ' הריבית הנתונה, לתקופה אחת.') + ' אחוזים כותבים עם סימן האחוז.'
-        elif name == 'nper': t += (' יש הפקדות, ולכן זה מספר ההפקדות.' if has_pmt(a) else ' מספר תקופות הריבית, באותה יחידה כמו rate.') + (' ההמרה נכתבת כנוסחה.' if a in given_f else '')
+        elif name == 'nper': t += (' יש הפקדות, ולכן זה מספר ההפקדות.' if has_pmt(a) or text(f'B{rc(a)[1] + 1}') == 'pmt' and f'{rc(a)[0]}{rc(a)[1] + 1}' not in typed else ' מספר תקופות הריבית, באותה יחידה כמו rate.') + (' ההמרה נכתבת כנוסחה.' if a in given_f else '')
         elif name == 'fv': t += ' הסכום העתידי נתון הפעם.'
         return t
     def note_f(a, f):
@@ -411,7 +415,7 @@ def _one_cell_steps(data, inputs, given_f, steps, head, fmt):
 
 
 def _xsheet(sid, task, data, sol, widths, head, rows=None, cols=None, hints=None, remind=None, partial=None, chart=None, values=False, done='', extra='',
-            fmt=None, traps=None, allow=None, r0=1, maxh=None, tol=None, need=None, needMsg=None, xname=None, xtitle=None, steps=None, side=False, title='', signMsg=None, qtext=None, build=None):
+            fmt=None, traps=None, allow=None, r0=1, maxh=None, tol=None, need=None, needMsg=None, xname=None, xtitle=None, steps=None, side=False, title='', signMsg=None, qtext=None, build=None, inotes=None):
     """The live sheet itself. side=True: the sheet sits beside a question, and its feedback goes under the question (an element .xfb)."""
     fmt = fmt or {}
     # Shay, 2026-11-03: the sheet holds no number of the solution. Every number of the question (and every period number) is typed by the student,
@@ -430,7 +434,7 @@ def _xsheet(sid, task, data, sol, widths, head, rows=None, cols=None, hints=None
     sol = {**inputs, **given_f, **sol}
     data = _argnames(dict(data), sol, head)
     if steps and MODE == 'deck':
-        steps = _one_cell_steps(data, inputs, given_f, steps, head, fmt)
+        steps = _one_cell_steps(data, inputs, given_f, steps, head, fmt, inotes)
     elif steps:   # the summary keeps the short form: the data, the period conversions, then each formula
         steps = ([dict(cells=dict(inputs), note='מזינים את נתוני השאלה בתאים, כפי שהם כתובים בשאלה. אחוזים כותבים עם סימן האחוז.', sel=next(iter(inputs)))] if inputs else []) + \
                 ([dict(cells=dict(given_f), note='התאמות לתקופה: ' + ' '.join(f'{a}: {f}' for a, f in given_f.items()))] if given_f else []) + steps
@@ -504,7 +508,7 @@ def XLS(sid, title, h, task, data, sol, widths, head, **kw):
     S(sid, title, h, f'<div class="act xlq" id="{sid}-x" data-cfg="{_cfg(cfgd)}">{inner}</div>', kick=f'חלק {CUR[0]} · אקסל בתוך השקף')
 
 
-def QX(sid, tag, title, stem, task, data, sol, widths, head, note=None, qmc='', **kw):
+def QX(sid, tag, title, stem, task, data, sol, widths, head, note=None, qmc='', kicktag=None, **kw):
     """A question beside the live sheet in which it is solved. No algebra: the steps are formulas in the sheet."""
     head_t = f'{tag}: {title}' if tag else title
     stem_html = ''.join(f'<p>{TX(x)}</p>' for x in stem)
@@ -519,7 +523,7 @@ def QX(sid, tag, title, stem, task, data, sol, widths, head, note=None, qmc='', 
     sv = f'<svg class="xlc" viewBox="0 0 {ch.get("W", 470)} {ch.get("H", 330)}" role="img" aria-label="תרשים"></svg>' if ch else ''
     wide = ' wide' if sum(widths) > 470 else ''   # a sheet with many columns takes more of the slide, the question less
     S(sid, head_t, head_t, f'<div class="act xlq qx{wide}" id="{sid}-x" data-cfg="{_cfg(cfgd)}"><div class="qr"><div class="card qstem">{stem_html}</div>{qmc}{sv}{notes}</div><div class="xw">{inner}<div class="xfb"></div></div></div>',
-      kick=f'חלק {CUR[0]} · {tag or "שאלה ואקסל"}', cls='qslide')
+      kick=f'חלק {CUR[0]} · {kicktag or tag or "שאלה ואקסל"}', cls='qslide')
 
 
 def MCX(sid, title, h, item, task, data, sol, widths, head, **kw):
@@ -578,5 +582,5 @@ def RL(items, start=1):
 
 
 exec(R('content_g.py'))
-for _f in ['content_fv.py'] + {1: ['content_l1a.py', 'content_l1b.py', 'content_l1c.py'], 2: ['content_l2a.py', 'content_l2b.py', 'content_l2c.py'], 3: ['content_l2a.py', 'content_l3a.py']}[LESSON]:
+for _f in ['content_fv.py'] + {1: ['content_l1a.py', 'content_l1b.py', 'content_l1c.py'], 2: ['content_l2a.py', 'content_l2b.py', 'content_l2c.py'], 3: ['content_kit3.py', 'content_l3a.py', 'content_l3b.py', 'content_l3c.py']}[LESSON]:
     exec(R(_f))

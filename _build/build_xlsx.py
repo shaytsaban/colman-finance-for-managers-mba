@@ -129,7 +129,10 @@ print('sheets', len(XSPECS), 'formulas', nform, 'largest relative gap (python, e
 print('rtl', all(FM[sname(s)].sheet_view.rightToLeft for s in XSPECS), '| charts', sum(len(FM[sname(s)]._charts) for s in XSPECS))
 KEY = {1: {'q-1': ('C7', 57881.25), 'q-dand': ('D6', 76153.6325971544), 'q-valdi': ('E6', 169017.739749039), 'q-taltul': ('G6', -91625.2486808057), 'q-2': ('C6', -463709.62972)},
        # lesson 2: the answers as the coursebook prints them (sheet "Lecture 2"), to the cent where it gives cents
-       2: {'q-del': ('D6', 37150.96), 'q-dean': ('F6', 157694.37), 't-1': ('C6', 152959.12), 'q-tal': ('E6', 173048.10), 'q-makc': ('C6', 136170.57), 'q-4': ('C6', 50931.21), 'q-5': ('C6', 192731.46)}}[LESSON]
+       2: {'q-del': ('D6', 37150.96), 'q-dean': ('F6', 157694.37), 't-1': ('C6', 152959.12), 'q-tal': ('E6', 173048.10), 'q-makc': ('C6', 136170.57), 'q-4': ('C6', 50931.21), 'q-5': ('C6', 192731.46)},
+       # lesson 3: sheets "Lecture 2" and "Lecture 3 New". Questions 1.1 and 2 are checked against the coursebook's formulas, not its printed text
+       3: {'q-zer': ('D6', 378863.90), 'q-ts': ('E6', 315865.08), 'q-tal2': ('C8', 22453.87), 'q-makd': ('C4', -4230.45), 'q-asaf': ('C4', -738.99), 'q-poz': ('C4', -224868.95),
+           'q-coral': ('C4', -3133.59), 'q-ts2': ('C4', -1265.94), 'q-naama': ('C4', -9819.42), 'q-shai3': ('C4', -1010.86), 'q-tal1': ('G6', 469500.43)}}[LESSON]
 for s in XSPECS:
     if s['sid'] in KEY:
         a, e = KEY[s['sid']]; v = V[sname(s)][a].value

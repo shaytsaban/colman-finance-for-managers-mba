@@ -2,11 +2,13 @@
 import os, re
 H = os.path.dirname(os.path.abspath(__file__))
 n = lambda s: f'<span class="n">{s}</span>'
-UP = [(3, 'מקטעים מורכבים, חילוץ ההפקדה והתאמת ריבית'), ('4 ו-5', 'חישובי ערך נוכחי, ריבית ושווי'), ('6 ו-7', 'הלוואות ולוחות סילוקין'), ('8 ו-9', 'קריטריונים לבחינת כדאיות השקעות'), ('10 ו-11', 'קיצוב הון ובניית תחזית תזרימי מזומנים לתכניות השקעה'), (12, 'דיון אקטואלי: מקרה בוחן (Case Study) ומשמעות מעשית של פרספקטיבה פיננסית'), (13, 'חזרה ודיון אינטגרטיבי')]
+UP = [(4, 'חילוץ מספר התקופות וחילוץ הריבית'), ('5', 'חישובי ערך נוכחי, ריבית ושווי'), ('6 ו-7', 'הלוואות ולוחות סילוקין'), ('8 ו-9', 'קריטריונים לבחינת כדאיות השקעות'), ('10 ו-11', 'קיצוב הון ובניית תחזית תזרימי מזומנים לתכניות השקעה'), (12, 'דיון אקטואלי: מקרה בוחן (Case Study) ומשמעות מעשית של פרספקטיבה פיננסית'), (13, 'חזרה ודיון אינטגרטיבי')]
 D = open(os.path.join(H, '..', 'lectures', 'lecture-1', 'presentation.html'), encoding='utf8').read()
 NS, NX, NM = D.count('<section class="slide'), D.count('act xlq'), D.count('class="mc"')
 D2 = open(os.path.join(H, '..', 'lectures', 'lecture-2', 'presentation.html'), encoding='utf8').read()
 NS2, NX2 = D2.count('<section class="slide'), D2.count('act xlq')
+D3 = open(os.path.join(H, '..', 'lectures', 'lecture-3', 'presentation.html'), encoding='utf8').read()
+NS3, NX3 = D3.count('<section class="slide'), D3.count('act xlq')
 ups = ''.join(f'<li><span class="un">{n(i if isinstance(i, int) else i.replace(" ו-", "-").replace(" עד ", "-"))}</span><span>{t}</span><em>בקרוב</em></li>' for i, t in UP)
 src = open(os.path.join(H, '..', '..', 'finance-for-managers', 'index.html'), encoding='utf8').read()
 css = re.search(r'<style>(.*?)</style>', src, re.S).group(1)
@@ -163,6 +165,41 @@ page = f'''<!doctype html>
 <li><b>איך פותרים:</b> כותבים בתאים הצהובים את נתוני השאלה ואת הנוסחאות. נתקעתם? חוזרים לשאלה במצגת: שם יש ציר זמן, רמז, תזכורת נוסחה, ו״הצעד הבא״ שממלא תא אחד בכל לחיצה ומסביר אותו.</li>
 <li><b>בדיקה:</b> רק אחרי שפתרתם, מול קובץ הפתרונות, תא אחר תא.</li>
 <li><b>לסיום:</b> שלושת שקפי ״סיכום בזרימה״ בסוף המצגת מסכמים את תהליך העבודה לכל סוג שאלה.</li>
+</ol></div>
+</article>
+<article class="lec" id="lesson-3">
+<div class="lec-head"><div class="lec-n">3</div><div><h3>מקטעים מורכבים, חילוץ ההפקדה והתאמת ריבית</h3><div class="sub">מפגש {n(3)}</div></div></div>
+<div class="lec-body">
+<div><h4>מה לומדים בשיעור</h4><ul class="learn">
+<li>חיבור למפגשים {n(1)} ו-{n(2)}: המסע עד כאן, המהות, ושלושה חיזוקים</li>
+<li>מקטעים מסוגים שונים: סדרה ואחריה צבירה, שלושה מקטעים, והפסקה בהפקדות</li>
+<li>חילוץ ההפקדה: היעד ידוע, כמה להפקיד? הפונקציה PMT</li>
+<li>התאמת ריבית לתקופת התשלום: ריבית נקובה וריבית אפקטיבית</li>
+<li>סכום חד פעמי באמצע הדרך</li>
+<li>אחרי שקף הסיום: {n(10)} שאלות לתרגול עצמי, וסיכום תהליכי העבודה בתרשימי זרימה</li>
+</ul></div>
+<div><h4>חומרי השיעור</h4>
+<div class="grp"><h5>1. בשיעור</h5><div class="links">
+<a class="lk p" href="lectures/lecture-3/presentation.html"><span class="e">🖥️</span><span><b>מצגת השיעור</b><span class="d">{n(NS3)} שקפים, וגיליון Excel חי ליד כל שאלה ({n(NX3)} גיליונות), עם בדיקה, רמזים, ו״הצעד הבא״ שמראה את הפתרון תא אחר תא. קו מקווקו אדום פותח הסבר נוסף.</span></span></a>
+</div></div>
+<div class="grp"><h5>2. אחרי השיעור, לחזרה</h5><div class="links">
+<a class="lk s" href="lectures/lecture-3/summary.pdf"><span class="e">📄</span><span><b>סיכום השיעור (PDF)</b><span class="d">כל תוכן המצגת במסמך אחד: הגדרות, השאלות והפתרון שלהן בגיליון, ומילון מושגים.</span></span></a>
+</div></div>
+<div class="grp"><h5>3. תרגול</h5><div class="links">
+<a class="lk x" href="materials/practice-3.xlsx" download><span class="e">📊</span><span><b>קובץ התרגול (Excel)</b><span class="d">{n(NX3)} גיליונות: כל שאלות המצגת, שאלות הבית ו-{n(10)} שאלות התרגול העצמי. התאים הצהובים ריקים: כותבים בהם את הנתונים ואת הנוסחאות.</span></span></a>
+<a class="lk r" href="materials/practice-3-solutions.xlsx" download><span class="e">✅</span><span><b>קובץ הפתרונות (Excel)</b><span class="d">אותם גיליונות עם נוסחאות חיות. פותחים רק אחרי שפותרים.</span></span></a>
+</div></div>
+</div>
+</div>
+<div class="todo"><h4>📝 תרגילי הבית של שיעור {n(3)}: מה פותרים, ובאיזה סדר</h4>
+<p style="font-size:16px;margin:0 0 8px">כל התרגילים נמצאים ב<b>קובץ התרגול</b>: לכל שאלה גיליון משלה, לפי סדר המצגת. אין חובת הגשה.</p>
+<ol>
+<li><b>קודם, שאלות הבית של המחברת</b> (חלק {n(5)} במצגת): שאלה {n(2)}, נעמה, ושאלה {n(3)}, שי (חילוץ ההפקדה עם התאמת ריבית). טלטול {n(1)}, מסלולים {n(4)} ו-{n(5)} (מקטעים).</li>
+<li><b>אחר כך, התרגיל המסכם</b> (חלק {n(5)}): גפן בע״מ. שני סכומים חד פעמיים, יעד, והפקדה רבעונית.</li>
+<li><b>תרגול עצמי</b> (חלק {n(6)}, אחרי שקף הסיום): {n(10)} שאלות, מהקלה למורכבת.</li>
+<li><b>איך פותרים:</b> כותבים בתאים הצהובים את נתוני השאלה ואת הנוסחאות. את המרת הריבית כותבים בתוך התא של rate. נתקעתם? חוזרים לשאלה במצגת: שם יש רמז, תזכורת נוסחה, ו״הצעד הבא״.</li>
+<li><b>בדיקה:</b> רק אחרי שפתרתם, מול קובץ הפתרונות, תא אחר תא.</li>
+<li><b>לסיום:</b> שלושת שקפי ״סיכום בזרימה״ בסוף המצגת מסכמים את תהליכי העבודה.</li>
 </ol></div>
 </article>
 <h2 class="sec" style="margin-top:36px">השיעורים הבאים</h2>

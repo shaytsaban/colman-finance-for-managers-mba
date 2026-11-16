@@ -53,14 +53,16 @@ def _textnum(seg):
     return NUM.sub(lambda m: f'<span class="n">{m.group(0)}</span>', seg)
 
 
-_FXT = re.compile(r'(?<![\w¤$])=?[(¤A-Z0-9][¤A-Z0-9().,:*/^+\-−%]*[¤A-Z0-9)%]')
+# a formula may open with a sign right after the equals sign (=-C6-90000)
+_FXT = re.compile(r'(?<![\w¤$])(?:=[-−+]?)?[(¤A-Z0-9][¤A-Z0-9().,:*/^+\-−%]*[¤A-Z0-9)%]')
 
 
 def FXW(t):
     """Wrap formula tokens inside Hebrew text in an isolated LTR span, so =¤D¤9*¤D¤10 keeps its order."""
     def w(m):
         x = m.group(0)
-        if not (x.startswith('=') and len(x) > 2 or re.search(r'[A-Z]{1,2}¤?\d', x) and re.search(r'[¤*^(/]', x)): return x
+        # a fraction (1/12) is one left-to-right unit too: in Hebrew text its two numbers would swap
+        if not (x.startswith('=') and len(x) > 2 or re.search(r'[A-Z]{1,2}¤?\d', x) and re.search(r'[¤*^(/]', x) or re.fullmatch(r'\d+/\d+', x)): return x
         return f'<span class="xlf" dir="ltr">{x}</span>'
     return ''.join(seg if seg.startswith('<') or seg.startswith('$') else _FXT.sub(w, seg) for seg in re.split(r'(<[^>]+>|\$[^$]+\$)', t))
 

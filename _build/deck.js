@@ -56,7 +56,7 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-t]');if(t&
  const g=e.target.closest('[data-go]');if(g){go(g.dataset.go);return;}
  if(!e.target.closest('#drawer'))dr.classList.remove('open');
  /* a click on the empty part of a slide advances, as on a classroom board */
- if(e.target.closest('#stage')&&!e.target.closest('button,a,input,select,label,.mc,.calc,.term,.act')&&!document.getSelection().toString())next();});
+ if(e.target.closest('#stage')&&!e.target.closest('button,a,input,select,label,.mc,.calc,.term,.act,.more')&&!document.getSelection().toString())next();});
 
 /* ---------- footers and boot ---------- */
 slides.forEach((s,i)=>{if(s.id==='s-title'||s.id==='s-end'||s.classList.contains('pd'))return;const f=document.createElement('div');f.className='ft';f.innerHTML='<span>'+COURSE+' · שיעור '+LESSON+'</span><span><b>ד״ר שי צבאן</b> · <span class="n">'+(i+1)+'</span></span>';s.appendChild(f);});
