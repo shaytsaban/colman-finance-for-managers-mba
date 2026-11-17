@@ -168,7 +168,7 @@ page = f'''<!doctype html>
 </ol></div>
 </article>
 <article class="lec" id="lesson-3">
-<div class="lec-head"><div class="lec-n">3</div><div><h3>מקטעים מורכבים, חילוץ ההפקדה והתאמת ריבית</h3><div class="sub">מפגש {n(3)}</div></div></div>
+<div class="lec-head"><div class="lec-n">3</div><div><h3>מקטעים מורכבים, חילוץ ההפקדה והתאמת ריבית</h3><div class="sub">מפגש {n(3)} · {n("17.11.2026")}</div></div></div>
 <div class="lec-body">
 <div><h4>מה לומדים בשיעור</h4><ul class="learn">
 <li>חיבור למפגשים {n(1)} ו-{n(2)}: המסע עד כאן, המהות, ושלושה חיזוקים</li>
