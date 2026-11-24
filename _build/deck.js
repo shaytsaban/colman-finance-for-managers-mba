@@ -66,27 +66,30 @@ window.__deck={show,next,prev,go,slides,groups,pending,setAll,openTerm,closeOver
 // The stage never scrolls: focusing a cell inside a sheet could push the whole slide sideways and cut it.
 (function(){const st=document.getElementById('stage');if(!st)return;const fix=()=>{if(st.scrollLeft||st.scrollTop){st.scrollLeft=0;st.scrollTop=0;}};st.addEventListener('scroll',fix);window.addEventListener('hashchange',()=>setTimeout(fix,0));})();
 
-// A short explanation pops up beside a cell of the five-row template when the cell is clicked.
+// A short explanation of the clicked cell, taken from this question's own steps, shown under the question (never over the grid).
 (function(){
-  const TIP={rate:['ריבית לתקופה אחת','כשיש הפקדות: הריבית לתקופת התשלום. אחוזים כותבים עם הסימן %. ריבית שנתית והפקדה חודשית? ממירים בתוך התא.','=RATE(nper, pmt, pv, fv)'],
-    nper:['מספר התקופות','כמה הפקדות, או כמה תקופות ריבית, באותה יחידה כמו rate. אפשר לכתוב חישוב, למשל =4*12.','=NPER(rate, pmt, pv, fv)'],
-    pmt:['התשלום הקבוע בכל תקופה','הפקדה היא כסף שיוצא: במינוס. החזר של הלוואה: במינוס. אין הפקדות: 0.','=PMT(rate, nper, pv, fv)'],
-    pv:['סכום חד פעמי בהתחלה','מפקידים היום: במינוס. מקבלים היום (הלוואה, מוצר בתשלומים): בפלוס. אין: 0.',null],
-    fv:['הסכום בסוף','מקבלים בסוף: בפלוס. הלוואה שנפרעה עד הסוף: 0.','=FV(rate, nper, pmt, pv)']};
+  const FN={rate:'=RATE(nper, pmt, pv, fv)',nper:'=NPER(rate, pmt, pv, fv)',pmt:'=PMT(rate, nper, pv, fv)',pv:'=PV(rate, nper, pmt, fv)',fv:'=FV(rate, nper, pmt, pv)'};
   let host=null,tip=null;
   const hide=()=>{if(tip){tip.remove();tip=null;}};
-  document.addEventListener('pointerdown',e=>{host=e.target.closest('.sheet');if(!host&&!e.target.closest('.ctip'))hide();},true);
+  const stepsOf=h=>{const a=h.closest('.act');if(!a)return null;for(const e of [a,...a.querySelectorAll('[data-cfg]')]){try{const c=JSON.parse(e.dataset.cfg);if(c.steps)return c;}catch(_){}}return null;};
+  const editingFormula=()=>{const ae=document.activeElement;return ae&&ae.tagName==='INPUT'&&/^\s*=/.test(ae.value||'');};
+  document.addEventListener('pointerdown',e=>{host=e.target.closest('.sheet');if(!host&&!e.target.closest('.ctip'))hide();if(host&&editingFormula())host=null;},true);
   document.addEventListener('pointerup',()=>{const h=host;if(!h)return;setTimeout(()=>{
+    if(editingFormula())return hide();
     const td=h.querySelector('td.sel');if(!td||!td.dataset.a)return hide();
-    const m=/^([A-Z]+)(\d+)$/.exec(td.dataset.a);if(!m||m[1]==='A'||m[1]==='B')return hide();
-    const lab=h.querySelector(`td[data-a="B${m[2]}"]`);const k=lab&&lab.textContent.trim();if(!TIP[k])return hide();
-    const [t,d,f]=TIP[k];hide();const xw=h.closest('.xw')||h.parentElement;if(getComputedStyle(xw).position==='static')xw.style.position='relative';
-    tip=document.createElement('div');tip.className='ctip';
-    tip.innerHTML=`<b>${k} · ${t}</b><span>${d}</span>`+(f?`<span>אם זו השורה החסרה, כותבים כאן: <code dir="ltr">${f}</code></span>`:'<span>pv כמעט תמיד נתון. כשהוא חסר, לומדים את PV במפגש הבא.</span>');
-    xw.appendChild(tip);
-    const st=document.getElementById('stage'),sc=st.getBoundingClientRect().width/1280,r=td.getBoundingClientRect(),w=xw.getBoundingClientRect();
-    let top=(r.bottom-w.top)/sc+6;const hh=tip.offsetHeight;if(top+hh>w.height/sc-4)top=(r.top-w.top)/sc-hh-6;
-    tip.style.top=Math.max(0,top)+'px';tip.style.right=Math.max(4,(w.right-r.right)/sc)+'px';
+    const a=td.dataset.a,m=/^([A-Z]+)(\d+)$/.exec(a);if(!m||m[1]==='A'||m[1]==='B')return hide();
+    const lab=h.querySelector(`td[data-a="B${m[2]}"]`),k=lab&&lab.textContent.trim();
+    const c=stepsOf(h);let html='';
+    if(c){const st=c.steps.find(x=>x.cells&&a in x.cells);const isF=st&&/^=/.test(String(st.cells[a]))&&!(c.inputs&&a in c.inputs);
+      if(st&&!isF)html=st.note;
+      else if(st&&FN[k])html=`<b>${k}:</b> זו השורה החסרה. כותבים כאן את הפונקציה שלה: <code dir="ltr">${FN[k]}</code>`;
+      else if(st)html='<b>תא של נוסחה.</b> לחצו ״רמז״ או ״הצעד הבא״ אם נתקעתם.';}
+    if(!html)return hide();
+    hide();const qx=h.closest('.qx'),qr=qx&&qx.querySelector('.qr');if(!qr)return;
+    if(getComputedStyle(qx).position==='static')qx.style.position='relative';
+    tip=document.createElement('div');tip.className='ctip';tip.innerHTML=`<span class="ca">${a}</span>${html}`;qx.appendChild(tip);
+    const st=document.getElementById('stage'),sc=st.getBoundingClientRect().width/1280,r=qr.getBoundingClientRect(),w=qx.getBoundingClientRect();
+    tip.style.right=Math.max(0,(w.right-r.right)/sc)+'px';tip.style.width=(r.width/sc)+'px';tip.style.bottom='0px';
   },30);});
   window.addEventListener('hashchange',hide);document.addEventListener('keydown',e=>{if(e.key==='Escape')hide();});
 })();

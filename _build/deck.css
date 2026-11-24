@@ -542,8 +542,9 @@ svg .st.show .ring{animation:xlring 1.6s ease-out 1s 2}
 .swap .mid{display:grid;place-items:center;font-size:44px;color:#ff6a4d;font-weight:800}
 .band.tip{background:#e9f7ef;border-right:5px solid #25a65f;color:#14532d}
 .yearrow.eff{grid-template-columns:repeat(6,1fr)}
-.ctip{position:absolute;z-index:40;max-width:330px;background:#16213a;color:#fff;border-radius:10px;padding:8px 12px;font-size:15px;line-height:1.45;box-shadow:0 8px 24px rgba(0,0,0,.25);direction:rtl;text-align:right;pointer-events:none}
-.ctip b{display:block;color:#ffd34d;margin-bottom:2px}.ctip span{display:block}.ctip code{background:rgba(255,255,255,.12);color:#fff;padding:1px 6px;border-radius:5px;font-size:14px;unicode-bidi:isolate}
+.ctip{position:absolute;z-index:40;background:#eef6f1;color:#16213a;border:2px solid #217346;border-radius:10px;padding:7px 11px;font-size:16.5px;line-height:1.4;box-shadow:0 6px 18px rgba(0,0,0,.12);direction:rtl;text-align:right;pointer-events:none;box-sizing:border-box}
+.ctip .ca{display:inline-block;background:#217346;color:#fff;border-radius:5px;padding:0 6px;margin-inline-end:6px;font:700 16.5px/1.5 'Segoe UI',Arial,sans-serif;direction:ltr}
+.ctip code{background:#fff;padding:1px 6px;border-radius:5px;unicode-bidi:isolate}
 @media print{.ctip{display:none}}
 /* lessons 4 and on: the live sheet gets most of the slide; the question column is narrower and the sheet chrome is compact */
 .stage.wide-x .qx{grid-template-columns:minmax(0,.62fr) minmax(0,1.38fr);gap:12px}
