@@ -654,6 +654,9 @@ svg .st.show .ring{animation:xlring 1.6s ease-out 1s 2}
 .swap .mid{display:grid;place-items:center;font-size:44px;color:#ff6a4d;font-weight:800}
 .band.tip{background:#e9f7ef;border-right:5px solid #25a65f;color:#14532d}
 .yearrow.eff{grid-template-columns:repeat(6,1fr)}
+.ctip{position:absolute;z-index:40;max-width:330px;background:#16213a;color:#fff;border-radius:10px;padding:8px 12px;font-size:15px;line-height:1.45;box-shadow:0 8px 24px rgba(0,0,0,.25);direction:rtl;text-align:right;pointer-events:none}
+.ctip b{display:block;color:#ffd34d;margin-bottom:2px}.ctip span{display:block}.ctip code{background:rgba(255,255,255,.12);color:#fff;padding:1px 6px;border-radius:5px;font-size:14px;unicode-bidi:isolate}
+@media print{.ctip{display:none}}
 </style>
 </head>
 <body>
@@ -789,6 +792,34 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-t]');if(t&
 slides.forEach((s,i)=>{if(s.id==='s-title'||s.id==='s-end'||s.classList.contains('pd'))return;const f=document.createElement('div');f.className='ft';f.innerHTML='<span>'+COURSE+' · שיעור '+LESSON+'</span><span><b>ד״ר שי צבאן</b> · <span class="n">'+(i+1)+'</span></span>';s.appendChild(f);});
 (function(){const h=location.hash.slice(1);const hi=slides.findIndex(s=>s.id===h);show(hi>=0?hi:0);})();
 window.__deck={show,next,prev,go,slides,groups,pending,setAll,openTerm,closeOverlays,cur:()=>cur};
+
+// The stage never scrolls: focusing a cell inside a sheet could push the whole slide sideways and cut it.
+(function(){const st=document.getElementById('stage');if(!st)return;const fix=()=>{if(st.scrollLeft||st.scrollTop){st.scrollLeft=0;st.scrollTop=0;}};st.addEventListener('scroll',fix);window.addEventListener('hashchange',()=>setTimeout(fix,0));})();
+
+// A short explanation pops up beside a cell of the five-row template when the cell is clicked.
+(function(){
+  const TIP={rate:['ריבית לתקופה אחת','כשיש הפקדות: הריבית לתקופת התשלום. אחוזים כותבים עם הסימן %. ריבית שנתית והפקדה חודשית? ממירים בתוך התא.','=RATE(nper, pmt, pv, fv)'],
+    nper:['מספר התקופות','כמה הפקדות, או כמה תקופות ריבית, באותה יחידה כמו rate. אפשר לכתוב חישוב, למשל =4*12.','=NPER(rate, pmt, pv, fv)'],
+    pmt:['התשלום הקבוע בכל תקופה','הפקדה היא כסף שיוצא: במינוס. החזר של הלוואה: במינוס. אין הפקדות: 0.','=PMT(rate, nper, pv, fv)'],
+    pv:['סכום חד פעמי בהתחלה','מפקידים היום: במינוס. מקבלים היום (הלוואה, מוצר בתשלומים): בפלוס. אין: 0.',null],
+    fv:['הסכום בסוף','מקבלים בסוף: בפלוס. הלוואה שנפרעה עד הסוף: 0.','=FV(rate, nper, pmt, pv)']};
+  let host=null,tip=null;
+  const hide=()=>{if(tip){tip.remove();tip=null;}};
+  document.addEventListener('pointerdown',e=>{host=e.target.closest('.sheet');if(!host&&!e.target.closest('.ctip'))hide();},true);
+  document.addEventListener('pointerup',()=>{const h=host;if(!h)return;setTimeout(()=>{
+    const td=h.querySelector('td.sel');if(!td||!td.dataset.a)return hide();
+    const m=/^([A-Z]+)(\d+)$/.exec(td.dataset.a);if(!m||m[1]==='A'||m[1]==='B')return hide();
+    const lab=h.querySelector(`td[data-a="B${m[2]}"]`);const k=lab&&lab.textContent.trim();if(!TIP[k])return hide();
+    const [t,d,f]=TIP[k];hide();const xw=h.closest('.xw')||h.parentElement;if(getComputedStyle(xw).position==='static')xw.style.position='relative';
+    tip=document.createElement('div');tip.className='ctip';
+    tip.innerHTML=`<b>${k} · ${t}</b><span>${d}</span>`+(f?`<span>אם זו השורה החסרה, כותבים כאן: <code dir="ltr">${f}</code></span>`:'<span>pv כמעט תמיד נתון. כשהוא חסר, לומדים את PV במפגש הבא.</span>');
+    xw.appendChild(tip);
+    const st=document.getElementById('stage'),sc=st.getBoundingClientRect().width/1280,r=td.getBoundingClientRect(),w=xw.getBoundingClientRect();
+    let top=(r.bottom-w.top)/sc+6;const hh=tip.offsetHeight;if(top+hh>w.height/sc-4)top=(r.top-w.top)/sc-hh-6;
+    tip.style.top=Math.max(0,top)+'px';tip.style.right=Math.max(4,(w.right-r.right)/sc)+'px';
+  },30);});
+  window.addEventListener('hashchange',hide);document.addEventListener('keydown',e=>{if(e.key==='Escape')hide();});
+})();
 
 /* ===== mini Excel: a small spreadsheet that behaves like Hebrew (right-to-left) Excel ===== */
 const esc=t=>String(t).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
