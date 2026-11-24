@@ -49,9 +49,11 @@ def ft(cols, target='fv', corner='', r1=1):
                 s[rr[k]] = v
             else:
                 d[rr[k]] = v
-        s[rr[tg]] = f"=FV({rr['rate']},{rr['nper']},{rr['pmt']},{rr['pv']})" if tg == 'fv' else f"=PMT({rr['rate']},{rr['nper']},{rr['pv']},{rr['fv']})"
-        f[rr['rate']] = 'pct4' if isinstance(c['rate'], str) else _pctf(c['rate'])
-        f[rr['pv']] = 'num2'; f[rr['fv']] = 'num2' if tg == 'fv' else 'num0'; f[rr['pmt']] = 'num0' if tg == 'fv' else 'num2'
+        s[rr[tg]] = {'fv': f"=FV({rr['rate']},{rr['nper']},{rr['pmt']},{rr['pv']})", 'pmt': f"=PMT({rr['rate']},{rr['nper']},{rr['pv']},{rr['fv']})",
+                     'nper': f"=NPER({rr['rate']},{rr['pmt']},{rr['pv']},{rr['fv']})", 'rate': f"=RATE({rr['nper']},{rr['pmt']},{rr['pv']},{rr['fv']})"}[tg]
+        f[rr['rate']] = 'pct4' if tg == 'rate' or isinstance(c['rate'], str) else _pctf(c['rate'])
+        f[rr['pv']] = 'num2'; f[rr['fv']] = 'num2' if tg == 'fv' else 'num0'; f[rr['pmt']] = 'num2' if tg == 'pmt' else 'num0'
+        if tg == 'nper': f[rr['nper']] = 'num2'
         out.append(rr[tg])
     return d, s, f, out
 

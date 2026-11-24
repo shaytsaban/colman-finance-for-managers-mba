@@ -2,13 +2,15 @@
 import os, re
 H = os.path.dirname(os.path.abspath(__file__))
 n = lambda s: f'<span class="n">{s}</span>'
-UP = [(4, 'חילוץ מספר התקופות וחילוץ הריבית'), ('5', 'חישובי ערך נוכחי, ריבית ושווי'), ('6 ו-7', 'הלוואות ולוחות סילוקין'), ('8 ו-9', 'קריטריונים לבחינת כדאיות השקעות'), ('10 ו-11', 'קיצוב הון ובניית תחזית תזרימי מזומנים לתכניות השקעה'), (12, 'דיון אקטואלי: מקרה בוחן (Case Study) ומשמעות מעשית של פרספקטיבה פיננסית'), (13, 'חזרה ודיון אינטגרטיבי')]
+UP = [('5', 'חישובי ערך נוכחי, ריבית ושווי'), ('6 ו-7', 'הלוואות ולוחות סילוקין'), ('8 ו-9', 'קריטריונים לבחינת כדאיות השקעות'), ('10 ו-11', 'קיצוב הון ובניית תחזית תזרימי מזומנים לתכניות השקעה'), (12, 'דיון אקטואלי: מקרה בוחן (Case Study) ומשמעות מעשית של פרספקטיבה פיננסית'), (13, 'חזרה ודיון אינטגרטיבי')]
 D = open(os.path.join(H, '..', 'lectures', 'lecture-1', 'presentation.html'), encoding='utf8').read()
 NS, NX, NM = D.count('<section class="slide'), D.count('act xlq'), D.count('class="mc"')
 D2 = open(os.path.join(H, '..', 'lectures', 'lecture-2', 'presentation.html'), encoding='utf8').read()
 NS2, NX2 = D2.count('<section class="slide'), D2.count('act xlq')
 D3 = open(os.path.join(H, '..', 'lectures', 'lecture-3', 'presentation.html'), encoding='utf8').read()
 NS3, NX3 = D3.count('<section class="slide'), D3.count('act xlq')
+D4 = open(os.path.join(H, '..', 'lectures', 'lecture-4', 'presentation.html'), encoding='utf8').read()
+NS4, NX4 = D4.count('<section class="slide'), D4.count('act xlq')
 ups = ''.join(f'<li><span class="un">{n(i if isinstance(i, int) else i.replace(" ו-", "-").replace(" עד ", "-"))}</span><span>{t}</span><em>בקרוב</em></li>' for i, t in UP)
 src = open(os.path.join(H, '..', '..', 'finance-for-managers', 'index.html'), encoding='utf8').read()
 css = re.search(r'<style>(.*?)</style>', src, re.S).group(1)
@@ -204,6 +206,39 @@ page = f'''<!doctype html>
 <li><b>איך פותרים:</b> כותבים בתאים הצהובים את נתוני השאלה ואת הנוסחאות. את המרת הריבית כותבים בתוך התא של rate. נתקעתם? חוזרים לשאלה במצגת: שם יש רמז, תזכורת נוסחה, ו״הצעד הבא״.</li>
 <li><b>בדיקה:</b> רק אחרי שפתרתם, מול קובץ הפתרונות, תא אחר תא.</li>
 <li><b>לסיום:</b> שלושת שקפי ״סיכום בזרימה״ בסוף המצגת מסכמים את תהליכי העבודה.</li>
+</ol></div>
+</article>
+<article class="lec" id="lesson-4">
+<div class="lec-head"><div class="lec-n">4</div><div><h3>חילוץ מספר התקופות וחילוץ הריבית</h3><div class="sub">מפגש {n(4)} · {n("24.11.2026")}</div></div></div>
+<div class="lec-body">
+<div><h4>מה לומדים בשיעור</h4><ul class="learn">
+<li>רענון של מפגש {n(3)}: חמש שורות, חילוץ ההפקדה, והתאמת ריבית</li>
+<li>חילוץ מספר התקופות: כמה זמן ייקח להגיע ליעד? הפונקציה NPER</li>
+<li>חילוץ הריבית: איזו ריבית מגולמת בעסקה? הפונקציה RATE, והמרה לריבית שנתית</li>
+<li>״תשלומים ללא ריבית״ והלוואה: הריבית שמסתתרת בעסקה</li>
+<li>תרשים החלטה: איזו פונקציה, לפי השורה שחסרה</li>
+<li>אחרי שקף הסיום: {n(6)} שאלות לתרגול עצמי</li>
+</ul></div>
+<div><h4>חומרי השיעור</h4>
+<div class="grp"><h5>1. בשיעור</h5><div class="links">
+<a class="lk p" href="lectures/lecture-4/presentation.html"><span class="e">🖥️</span><span><b>מצגת השיעור</b><span class="d">{n(NS4)} שקפים, וגיליון Excel חי ליד כל שאלה ({n(NX4)} גיליונות), עם בדיקה, רמזים, ו״הצעד הבא״ שמראה את הפתרון תא אחר תא. קו מקווקו אדום פותח הסבר נוסף.</span></span></a>
+</div></div>
+<div class="grp"><h5>2. אחרי השיעור, לחזרה</h5><div class="links">
+<a class="lk s" href="lectures/lecture-4/summary.pdf"><span class="e">📄</span><span><b>סיכום השיעור (PDF)</b><span class="d">כל תוכן המצגת במסמך אחד: הגדרות, השאלות והפתרון שלהן בגיליון, ומילון מושגים.</span></span></a>
+</div></div>
+<div class="grp"><h5>3. תרגול</h5><div class="links">
+<a class="lk x" href="materials/practice-4.xlsx" download><span class="e">📊</span><span><b>קובץ התרגול (Excel)</b><span class="d">{n(NX4)} גיליונות: כל שאלות המצגת, שאלות הבית ו-{n(6)} שאלות התרגול העצמי. ליד כל גיליון: השאלה ורמזים. התאים הצהובים ריקים: כותבים בהם את הנתונים ואת הנוסחאות.</span></span></a>
+<a class="lk r" href="materials/practice-4-solutions.xlsx" download><span class="e">✅</span><span><b>קובץ הפתרונות (Excel)</b><span class="d">אותם גיליונות עם נוסחאות חיות, וליד כל גיליון הפתרון מוסבר תא אחר תא. פותחים רק אחרי שפותרים.</span></span></a>
+</div></div>
+</div>
+</div>
+<div class="todo"><h4>📝 תרגילי הבית של שיעור {n(4)}: מה פותרים, ובאיזה סדר</h4>
+<p style="font-size:16px;margin:0 0 8px">כל התרגילים נמצאים ב<b>קובץ התרגול</b>: לכל שאלה גיליון משלה, לפי סדר המצגת. אין חובת הגשה.</p>
+<ol>
+<li><b>קודם, שלוש שאלות הבית</b> (חלק {n(5)} במצגת): מאיה (כמה הפקדות, NPER), עמית (תשואה של קרן השתלמות, RATE), והספה ב-{n(36)} תשלומים (הריבית המגולמת).</li>
+<li><b>תרגול עצמי</b> (חלק {n(6)}, אחרי שקף הסיום): {n(6)} שאלות, מהקלה למורכבת. בכל אחת מזהים קודם איזו שורה חסרה.</li>
+<li><b>איך פותרים:</b> כותבים בתאים הצהובים את נתוני השאלה ואת הנוסחה. מה שיוצא במינוס, מה שמתקבל בפלוס. נתקעתם? הרמזים כתובים ליד כל גיליון, ובמצגת יש ״הצעד הבא״.</li>
+<li><b>בדיקה:</b> רק אחרי שפתרתם, מול קובץ הפתרונות, תא אחר תא.</li>
 </ol></div>
 </article>
 <h2 class="sec" style="margin-top:36px">השיעורים הבאים</h2>

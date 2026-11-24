@@ -83,6 +83,21 @@ def build(path, solved):
                 se = Series(Reference(ws, min_col=col, min_row=4, max_row=15), Reference(ws, min_col=1, min_row=5, max_row=15), title_from_data=True); se.marker.symbol = 'circle'; ch.series.append(se)
             ws.add_chart(ch, 'E5')
         ws[f'{tc}{tr + 2}'] = NOTE; ws[f'{tc}{tr + 2}'].font = Font(name='Arial', size=10, italic=True, color='5D6A86')
+        if LESSON >= 4 and tc != 'A':
+            # as in the options course files: the hints beside the practice sheet, and the full solution, cell by cell, beside the solved sheet
+            rr = tr + 4
+            def _put(t, bold=False, col='16213A'):
+                nonlocal rr
+                c = ws[f'{tc}{rr}']; c.value = t; c.font = Font(name='Arial', size=11, bold=bold, color=col); c.alignment = Alignment(wrap_text=True, vertical='top', horizontal='right'); rr += 1
+            if not solved:
+                _put('רמזים (פותחים רק כשנתקעים):', True, NAVY)
+                for k, h in enumerate(s['hints'], 1): _put(f'{k}. {h}')
+                _put('את הפתרון המלא, תא אחר תא, תמצאו בקובץ הפתרונות ובמצגת (״הצעד הבא״).', False, '5D6A86')
+            else:
+                _put('הפתרון, תא אחר תא:', True, NAVY)
+                for cells, note in s['xsteps']:
+                    if note: _put(f"{', '.join(cells)}: {note}")
+                if s['done']: _put('התשובה: ' + s['done'], True, '0F7A4A')
     wb.calculation.fullCalcOnLoad = True
     wb.save(path)
 
@@ -132,7 +147,10 @@ KEY = {1: {'q-1': ('C7', 57881.25), 'q-dand': ('D6', 76153.6325971544), 'q-valdi
        2: {'q-del': ('D6', 37150.96), 'q-dean': ('F6', 157694.37), 't-1': ('C6', 152959.12), 'q-tal': ('E6', 173048.10), 'q-makc': ('C6', 136170.57), 'q-4': ('C6', 50931.21), 'q-5': ('C6', 192731.46)},
        # lesson 3: sheets "Lecture 2" and "Lecture 3 New". Questions 1.1 and 2 are checked against the coursebook's formulas, not its printed text
        3: {'q-zer': ('D6', 378863.90), 'q-ts': ('E6', 315865.08), 'q-tal2': ('C8', 22453.87), 'q-makd': ('C4', -4230.45), 'q-asaf': ('C4', -738.99), 'q-poz': ('C4', -224868.95),
-           'q-coral': ('C4', -3133.59), 'q-ts2': ('C4', -1265.94), 'q-naama': ('C4', -9819.42), 'q-shai3': ('C4', -1010.86), 'q-tal1': ('G6', 469500.43)}}[LESSON]
+           'q-coral': ('C4', -3133.59), 'q-ts2': ('C4', -1265.94), 'q-naama': ('C4', -9819.42), 'q-shai3': ('C4', -1010.86), 'q-tal1': ('G6', 469500.43)},
+       # lesson 4: new questions; the expected values come from fin.py, checked here against Excel's own engines
+       4: {'k-1': ('C4', -1683.91), 'q-n1': ('C3', 52.60), 'q-n2': ('C3', 96.61), 'q-n3': ('C3', 17.67), 'q-n4': ('C3', 121.53),
+           'q-r1': ('C2', 0.081484), 'q-r3': ('C7', 0.218341), 'q-r4': ('C7', 0.121423), 'h-1': ('C3', 87.41), 'u-6': ('C4', -1551.28)}}[LESSON]
 for s in XSPECS:
     if s['sid'] in KEY:
         a, e = KEY[s['sid']]; v = V[sname(s)][a].value

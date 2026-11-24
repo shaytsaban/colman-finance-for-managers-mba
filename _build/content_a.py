@@ -6,7 +6,7 @@ COURSE = 'מימון למנהלות ומנהלים'
 INST = 'המסלול האקדמי המכללה למנהל · MBA'
 SEM = 'סמסטר א׳ תשפ״ז'
 LESSON = globals().get('LESSON', 1)
-TOTAL_PARTS = {1: 6, 2: 7, 3: 7}[LESSON]
+TOTAL_PARTS = {1: 6, 2: 7, 3: 7, 4: 6}[LESSON]
 # per lesson: deck title, subtitle, chips, cover line and the next meeting. The first meeting date is not in the source files.
 LMETA = {
  1: dict(date='', h1=('מבוא למימון:', 'מטרת הפירמה וערך עתידי'), title='מבוא למימון וערך עתידי',
@@ -20,7 +20,11 @@ LMETA = {
  3: dict(date='', h1=('מקטעים, חילוץ ההפקדה', 'והתאמת ריבית'), title='מקטעים, חילוץ ההפקדה והתאמת ריבית',
          sub='ממשיכים מהמקום שעצרנו: מקטעים מסוגים שונים, והפסקה. אחר כך הופכים את השאלה: כמה להפקיד כדי להגיע ליעד. ולבסוף: ריבית שנתונה לתקופה אחרת מתקופת התשלום.', chip='כל שאלה נפתרת ב-Excel',
          cover='חיבור למפגשים 1 ו-2, מקטעים מורכבים והפסקה בהפקדות, חילוץ ההפקדה בפונקציה PMT, התאמת ריבית נקובה ואפקטיבית לתקופת התשלום, סכום חד פעמי באמצע הדרך, תרגול עצמי עם פתרון מלא, וסיכום תהליכי העבודה בתרשימי זרימה.',
-         next_h='חילוץ מספר התקופות וחילוץ הריבית', next_t='כמה זמן צריך לחסוך כדי להגיע ליעד (הפונקציה NPER), ואיזו ריבית מגולמת בעסקה (הפונקציה RATE).')}[LESSON]
+         next_h='חילוץ מספר התקופות וחילוץ הריבית', next_t='כמה זמן צריך לחסוך כדי להגיע ליעד (הפונקציה NPER), ואיזו ריבית מגולמת בעסקה (הפונקציה RATE).'),
+ 4: dict(date='', h1=('חילוץ מספר התקופות', 'וחילוץ הריבית'), title='חילוץ מספר התקופות וחילוץ הריבית',
+         sub='עוד שני חילוצים באותה תבנית של חמש שורות: כמה זמן ייקח להגיע ליעד, ואיזו ריבית מגולמת בעסקה. ובסוף: איך יודעים איזו פונקציה לבחור.', chip='כל שאלה נפתרת ב-Excel',
+         cover='רענון של חילוץ ההפקדה ושל התאמת ריבית, חילוץ מספר התקופות בפונקציה NPER, חילוץ הריבית בפונקציה RATE והמרתה לריבית שנתית, ״תשלומים ללא ריבית״ והלוואה, בחירת הפונקציה לפי הנעלם, תרגול עצמי עם פתרון מלא, וסיכום בזרימה.',
+         next_h='ערך נוכחי', next_t='מהעתיד אל היום: כמה שווה היום סכום שיתקבל בעתיד, וסדרה של תשלומים עתידיים. הפונקציה PV.')}[LESSON]
 XSPECS = []        # every live sheet, in deck order: the practice workbooks are built from these
 SL = []            # every slide, in order
 CUR = [None]       # current part number
@@ -446,7 +450,8 @@ def _xsheet(sid, task, data, sol, widths, head, rows=None, cols=None, hints=None
     for st in steps or []:
         assert all(st['cells'][a] == sol[a] for a in st['cells']), (sid, 'a step must write the solution formula')
     if steps: assert set().union(*[set(st['cells']) for st in steps]) == set(sol), (sid, 'the steps must cover every target')
-    XSPECS.append(dict(qtext=qtext or task, vin=list(inputs), sid=sid, name=xname or sid, title=xtitle or re.sub('<[^>]+>', '', title), task=re.sub('<[^>]+>', '', task).replace('¤', '$'), data=data, sol=sol, fmt=fmt, widths=widths, head=head, rows=rs, cols=cs, r0=r0, vals=vals, part=CUR[0]))
+    XSPECS.append(dict(qtext=qtext or task, vin=list(inputs), sid=sid, name=xname or sid, title=xtitle or re.sub('<[^>]+>', '', title), task=re.sub('<[^>]+>', '', task).replace('¤', '$'), data=data, sol=sol, fmt=fmt, widths=widths, head=head, rows=rs, cols=cs, r0=r0, vals=vals, part=CUR[0], hints=[re.sub('<[^>]+>', '', h).replace('¤', '$') for h in (hints or [])], done=re.sub('<[^>]+>', '', done or ''),
+                       xsteps=[(list(st['cells']), re.sub('<[^>]+>', '', st.get('note', '')).replace('¤', '$')) for st in (steps or [])]))
     if MODE == 'pdf':
         L = [chr(65 + i) for i in range(cs)]
         t = ''
@@ -582,5 +587,5 @@ def RL(items, start=1):
 
 
 exec(R('content_g.py'))
-for _f in ['content_fv.py'] + {1: ['content_l1a.py', 'content_l1b.py', 'content_l1c.py'], 2: ['content_l2a.py', 'content_l2b.py', 'content_l2c.py'], 3: ['content_kit3.py', 'content_l3a.py', 'content_l3b.py', 'content_l3c.py']}[LESSON]:
+for _f in ['content_fv.py'] + {1: ['content_l1a.py', 'content_l1b.py', 'content_l1c.py'], 2: ['content_l2a.py', 'content_l2b.py', 'content_l2c.py'], 3: ['content_kit3.py', 'content_l3a.py', 'content_l3b.py', 'content_l3c.py'], 4: ['content_kit3.py', 'content_l4a.py', 'content_l4b.py']}[LESSON]:
     exec(R(_f))
