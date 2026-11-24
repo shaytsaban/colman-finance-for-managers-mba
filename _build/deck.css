@@ -560,3 +560,5 @@ svg .st.show .ring{animation:xlring 1.6s ease-out 1s 2}
 .stage.wide-x .xl-tools button{padding:5px 9px}
 .stage.wide-x .xl-g td{font-size:18px;height:34px}
 .stage.wide-x .qx .qr .meme{max-width:100%}
+/* source links on real-world slides (lesson 4 part 7, lesson 5 part 1) */
+.srcl{font-size:17px;line-height:1.45;margin:0}.srcl a{color:#27447f;text-decoration:underline;text-underline-offset:3px}

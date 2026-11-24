@@ -75,3 +75,25 @@ def SUMSTOP(sid, part, items, toon=None):
     S(sid, f'מה למדנו בחלק {part}', f'עוצרים רגע: מה למדנו בחלק {part}',
       '<ol class="steps">' + ''.join(ST(i + 1, f'<span>{TX(x)}</span>', 'li') for i, x in enumerate(items)) + '</ol>'
       + (TOON(toon[0], toon[1], len(items) + 1) if toon else ''), kick=f'חלק {part} · סיכום ביניים')
+
+
+# Lesson 4 part 7 and lesson 5 part 1: financing arrangements, with the cash price and the down payment in rows 8 and 9.
+_CASH, _DOWN = 'מחיר במזומן', 'מקדמה (משולמת היום)'
+
+
+def fsheet(cols, target='rate', annual=(), cash=False):
+    """The five rows, and under them: row 7 the annual effective rate (for the columns in annual), rows 8 and 9 the cash price and
+    the down payment (when cash=True, pv of each column is =L8-L9)."""
+    cols = [dict(c, pv=f'={chr(67 + j)}8-{chr(67 + j)}9') if cash else c for j, c in enumerate(cols)]
+    d, s, f, o = ft(cols, target=target)
+    for L in annual:
+        d['A7'] = 'ריבית שנתית אפקטיבית'
+        s[f'{L}7'] = f'=(1+{L}2)^12-1'; f[f'{L}7'] = 'pct4'
+    if cash:
+        d['A8'] = _CASH; d['A9'] = _DOWN
+        for j, c in enumerate(cols):
+            L = chr(67 + j)
+            d[f'{L}8'] = c['cash']; d[f'{L}9'] = c['down']; f[f'{L}8'] = 'num0'; f[f'{L}9'] = 'num0'
+    return d, s, f, o
+
+

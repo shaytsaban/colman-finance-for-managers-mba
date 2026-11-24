@@ -139,7 +139,7 @@ for s, ev in zip(XSPECS, EV):
         for who, x in (('python', py), ('engine', js)):
             if not isinstance(x, (int, float)): errs.append((n, a, who, x)); continue
             rel = abs(x - lo) / max(1, abs(lo)); worst = max(worst, rel)
-            if rel > 1e-9: errs.append((n, a, who, x, lo))
+            if rel > (1e-8 if abs(lo) < 1e-6 else 1e-9): errs.append((n, a, who, x, lo))   # a rate of 0% is a root found by iteration: noise of 1e-9
 print('sheets', len(XSPECS), 'formulas', nform, 'largest relative gap (python, engine vs LibreOffice)', f'{worst:.1e}', 'errors', errs[:10])
 print('rtl', all(FM[sname(s)].sheet_view.rightToLeft for s in XSPECS), '| charts', sum(len(FM[sname(s)]._charts) for s in XSPECS))
 KEY = {1: {'q-1': ('C7', 57881.25), 'q-dand': ('D6', 76153.6325971544), 'q-valdi': ('E6', 169017.739749039), 'q-taltul': ('G6', -91625.2486808057), 'q-2': ('C6', -463709.62972)},
@@ -150,7 +150,9 @@ KEY = {1: {'q-1': ('C7', 57881.25), 'q-dand': ('D6', 76153.6325971544), 'q-valdi
            'q-coral': ('C4', -3133.59), 'q-ts2': ('C4', -1265.94), 'q-naama': ('C4', -9819.42), 'q-shai3': ('C4', -1010.86), 'q-tal1': ('G6', 469500.43)},
        # lesson 4: new questions; the expected values come from fin.py, checked here against Excel's own engines
        4: {'k-1': ('C4', -1683.91), 'q-n1': ('C3', 52.60), 'q-n2': ('C3', 96.61), 'q-n3': ('C3', 17.67), 'q-n4': ('C3', 121.53),
-           'q-r1': ('C2', 0.081484), 'q-r3': ('C7', 0.218341), 'q-r4': ('C7', 0.121423), 'h-1': ('C3', 87.41), 'u-6': ('C4', -1551.28)},
+           'q-r1': ('C2', 0.081484), 'q-r3': ('C7', 0.218341), 'q-r4': ('C7', 0.121423), 'h-1': ('C6', 25431.96), 'u-6': ('C4', -1551.28),
+           # part 7 and home: three questions of the coursebook (sheet "Lecture 3 New": ״מגה לבית״, question 15, question 16, home question 6)
+           'f-2': ('C2', 0.0193350544), 'f-6': ('C2', 0.00948005244), 'f-8': ('C2', 0.28376303), 'h-4': ('C2', 0.012604970)},
        # lesson 5: sheet "Lecture 4 New", the coursebook's own formula results
        5: {'q-yarom': ('D5', -81629.79), 'q-land': ('C5', -783526.17), 'q-shmuel': ('D5', -285715.39), 'q-zarov': ('D5', -398357.06), 'q-ts7': ('C5', -232769.99),
            'q-ts7b': ('D5', -216000.83), 'q-hadil': ('E5', -167526.33), 'q-valdi': ('E5', -878595.25), 'q-ilana': ('E5', -151444.97), 'q-adiel': ('E5', -803709.04), 'h-1': ('E5', -190536.10)}}[LESSON]
