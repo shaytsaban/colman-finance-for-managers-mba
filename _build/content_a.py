@@ -6,7 +6,7 @@ COURSE = 'מימון למנהלות ומנהלים'
 INST = 'המסלול האקדמי המכללה למנהל · MBA'
 SEM = 'סמסטר א׳ תשפ״ז'
 LESSON = globals().get('LESSON', 1)
-TOTAL_PARTS = {1: 6, 2: 7, 3: 7, 4: 6}[LESSON]
+TOTAL_PARTS = {1: 6, 2: 7, 3: 7, 4: 6, 5: 6}[LESSON]
 # per lesson: deck title, subtitle, chips, cover line and the next meeting. The first meeting date is not in the source files.
 LMETA = {
  1: dict(date='', h1=('מבוא למימון:', 'מטרת הפירמה וערך עתידי'), title='מבוא למימון וערך עתידי',
@@ -24,7 +24,11 @@ LMETA = {
  4: dict(date='', h1=('חילוץ מספר התקופות', 'וחילוץ הריבית'), title='חילוץ מספר התקופות וחילוץ הריבית',
          sub='עוד שני חילוצים באותה תבנית של חמש שורות: כמה זמן ייקח להגיע ליעד, ואיזו ריבית מגולמת בעסקה. ובסוף: איך יודעים איזו פונקציה לבחור.', chip='כל שאלה נפתרת ב-Excel',
          cover='רענון של חילוץ ההפקדה ושל התאמת ריבית, חילוץ מספר התקופות בפונקציה NPER, חילוץ הריבית בפונקציה RATE והמרתה לריבית שנתית, ״תשלומים ללא ריבית״ והלוואה, בחירת הפונקציה לפי הנעלם, תרגול עצמי עם פתרון מלא, וסיכום בזרימה.',
-         next_h='ערך נוכחי', next_t='מהעתיד אל היום: כמה שווה היום סכום שיתקבל בעתיד, וסדרה של תשלומים עתידיים. הפונקציה PV.')}[LESSON]
+         next_h='ערך נוכחי', next_t='מהעתיד אל היום: כמה שווה היום סכום שיתקבל בעתיד, וסדרה של תשלומים עתידיים. הפונקציה PV.'),
+ 5: dict(date='', h1=('ערך נוכחי:', 'כמה שווה היום?'), title='ערך נוכחי של סכום יחיד',
+         sub='הופכים את הכיוון: סכום שיתקבל בעתיד, כמה הוא שווה היום? ריבית אלטרנטיבית, ריבית שמשתנה, וכמה סכומים, תמיד מהסוף להתחלה.', chip='טיוטה, כפופה לעדכונים',
+         cover='מערך נוכחי לערך עתידי ובחזרה, הפונקציה PV, ריבית אלטרנטיבית ומשמעות השווי, ריבית שמשתנה וחישוב מהסוף להתחלה, כמה סכומים בעתיד, תרגול עצמי עם פתרון מלא.',
+         next_h='ערך נוכחי של סדרה', next_t='כמה שווה היום סדרה של תקבולים קבועים: שכירות, קצבה, ותשלומים של הלוואה.')}[LESSON]
 XSPECS = []        # every live sheet, in deck order: the practice workbooks are built from these
 SL = []            # every slide, in order
 CUR = [None]       # current part number
@@ -587,5 +591,5 @@ def RL(items, start=1):
 
 
 exec(R('content_g.py'))
-for _f in ['content_fv.py'] + {1: ['content_l1a.py', 'content_l1b.py', 'content_l1c.py'], 2: ['content_l2a.py', 'content_l2b.py', 'content_l2c.py'], 3: ['content_kit3.py', 'content_l3a.py', 'content_l3b.py', 'content_l3c.py'], 4: ['content_kit3.py', 'content_l4a.py', 'content_l4b.py']}[LESSON]:
+for _f in ['content_fv.py'] + {1: ['content_l1a.py', 'content_l1b.py', 'content_l1c.py'], 2: ['content_l2a.py', 'content_l2b.py', 'content_l2c.py'], 3: ['content_kit3.py', 'content_l3a.py', 'content_l3b.py', 'content_l3c.py'], 4: ['content_kit3.py', 'content_l4a.py', 'content_l4b.py'], 5: ['content_kit3.py', 'content_l5a.py', 'content_l5b.py']}[LESSON]:
     exec(R(_f))

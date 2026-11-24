@@ -2,7 +2,7 @@
 import os, re
 H = os.path.dirname(os.path.abspath(__file__))
 n = lambda s: f'<span class="n">{s}</span>'
-UP = [('5', 'חישובי ערך נוכחי, ריבית ושווי'), ('6 ו-7', 'הלוואות ולוחות סילוקין'), ('8 ו-9', 'קריטריונים לבחינת כדאיות השקעות'), ('10 ו-11', 'קיצוב הון ובניית תחזית תזרימי מזומנים לתכניות השקעה'), (12, 'דיון אקטואלי: מקרה בוחן (Case Study) ומשמעות מעשית של פרספקטיבה פיננסית'), (13, 'חזרה ודיון אינטגרטיבי')]
+UP = [('6 ו-7', 'הלוואות ולוחות סילוקין'), ('8 ו-9', 'קריטריונים לבחינת כדאיות השקעות'), ('10 ו-11', 'קיצוב הון ובניית תחזית תזרימי מזומנים לתכניות השקעה'), (12, 'דיון אקטואלי: מקרה בוחן (Case Study) ומשמעות מעשית של פרספקטיבה פיננסית'), (13, 'חזרה ודיון אינטגרטיבי')]
 D = open(os.path.join(H, '..', 'lectures', 'lecture-1', 'presentation.html'), encoding='utf8').read()
 NS, NX, NM = D.count('<section class="slide'), D.count('act xlq'), D.count('class="mc"')
 D2 = open(os.path.join(H, '..', 'lectures', 'lecture-2', 'presentation.html'), encoding='utf8').read()
@@ -11,6 +11,8 @@ D3 = open(os.path.join(H, '..', 'lectures', 'lecture-3', 'presentation.html'), e
 NS3, NX3 = D3.count('<section class="slide'), D3.count('act xlq')
 D4 = open(os.path.join(H, '..', 'lectures', 'lecture-4', 'presentation.html'), encoding='utf8').read()
 NS4, NX4 = D4.count('<section class="slide'), D4.count('act xlq')
+D5 = open(os.path.join(H, '..', 'lectures', 'lecture-5', 'presentation.html'), encoding='utf8').read()
+NS5, NX5 = D5.count('<section class="slide'), D5.count('act xlq')
 ups = ''.join(f'<li><span class="un">{n(i if isinstance(i, int) else i.replace(" ו-", "-").replace(" עד ", "-"))}</span><span>{t}</span><em>בקרוב</em></li>' for i, t in UP)
 src = open(os.path.join(H, '..', '..', 'finance-for-managers', 'index.html'), encoding='utf8').read()
 css = re.search(r'<style>(.*?)</style>', src, re.S).group(1)
@@ -240,6 +242,30 @@ page = f'''<!doctype html>
 <li><b>איך פותרים:</b> כותבים בתאים הצהובים את נתוני השאלה ואת הנוסחה. מה שיוצא במינוס, מה שמתקבל בפלוס. נתקעתם? הרמזים כתובים ליד כל גיליון, ובמצגת יש ״הצעד הבא״.</li>
 <li><b>בדיקה:</b> רק אחרי שפתרתם, מול קובץ הפתרונות, תא אחר תא.</li>
 </ol></div>
+</article>
+<article class="lec" id="lesson-5">
+<div class="lec-head"><div class="lec-n">5</div><div><h3>ערך נוכחי של סכום יחיד</h3><div class="sub">מפגש {n(5)} · <b style="color:#c0392b">טיוטה, כפופה לעדכונים</b></div></div></div>
+<div class="lec-body">
+<div><h4>מה לומדים בשיעור</h4><ul class="learn">
+<li>מערך עתידי לערך נוכחי: אותו ציר, בכיוון ההפוך</li>
+<li>הפונקציה PV, ריבית אלטרנטיבית, ומה השווי אומר</li>
+<li>ריבית שמשתנה: מהסוף להתחלה, שלב אחר שלב</li>
+<li>כמה סכומים בעתיד: ערך של שלב, ועוד הסכום של אותו זמן</li>
+<li>אחרי שקף הסיום: {n(4)} שאלות לתרגול עצמי</li>
+</ul></div>
+<div><h4>חומרי השיעור</h4>
+<div class="grp"><h5>1. בשיעור</h5><div class="links">
+<a class="lk p" href="lectures/lecture-5/presentation.html"><span class="e">🖥️</span><span><b>מצגת השיעור (טיוטה)</b><span class="d">{n(NS5)} שקפים, וגיליון Excel חי ליד כל שאלה ({n(NX5)} גיליונות), עם בדיקה, רמזים, ו״הצעד הבא״ שמראה את הפתרון תא אחר תא.</span></span></a>
+</div></div>
+<div class="grp"><h5>2. אחרי השיעור, לחזרה</h5><div class="links">
+<a class="lk s" href="lectures/lecture-5/summary.pdf"><span class="e">📄</span><span><b>סיכום השיעור (PDF, טיוטה)</b><span class="d">כל תוכן המצגת במסמך אחד.</span></span></a>
+</div></div>
+<div class="grp"><h5>3. תרגול</h5><div class="links">
+<a class="lk x" href="materials/practice-5.xlsx" download><span class="e">📊</span><span><b>קובץ התרגול (Excel)</b><span class="d">{n(NX5)} גיליונות: שאלות המצגת, שאלות הבית ותרגול עצמי. ליד כל גיליון: השאלה ורמזים.</span></span></a>
+<a class="lk r" href="materials/practice-5-solutions.xlsx" download><span class="e">✅</span><span><b>קובץ הפתרונות (Excel)</b><span class="d">נוסחאות חיות, וליד כל גיליון הפתרון מוסבר תא אחר תא.</span></span></a>
+</div></div>
+</div>
+</div>
 </article>
 <h2 class="sec" style="margin-top:36px">השיעורים הבאים</h2>
 <ul class="ups">{ups}</ul>

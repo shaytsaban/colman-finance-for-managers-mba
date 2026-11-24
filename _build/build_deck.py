@@ -51,7 +51,7 @@ gj = json.dumps({k: {f: (TX(FXW(v)) if f != 'en' else v) for f, v in g.items()} 
 js = f'const COURSE={json.dumps(COURSE, ensure_ascii=False)};const LESSON={LESSON};\nconst G={gj};\n' + R('deck.js') + '\n' + R('xl.js') + '\n' + R('act.js')
 title = f'{COURSE} | שיעור {LESSON} | {LMETA["title"]}'
 html = (f'<!doctype html>\n<html lang="he" dir="rtl">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<title>{title}</title>\n<style>\n'
-        + fonts + base + R('deck.css') + '</style>\n</head>\n<body>\n<div class="stage" id="stage">\n' + slides_html + '\n' + tail
+        + fonts + base + R('deck.css') + '</style>\n</head>\n<body>\n<div class="stage' + (' wide-x' if LESSON >= 4 else '') + '" id="stage">\n' + slides_html + '\n' + tail
         + '<script>\n(function(){\n' + js + '\n})();\n</script>\n</body>\n</html>\n').replace('¤', '$')
 for bad in ('—', '־', '–', '…'):
     assert bad not in html.replace(fonts, ''), 'forbidden character ' + bad
