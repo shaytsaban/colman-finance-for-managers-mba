@@ -235,6 +235,10 @@ page = f'''<!doctype html>
 </div></div>
 </div>
 </div>
+<div class="rec"><h4>הקלטת השיעור, מהמפגש של {n("24.11.2026")}</h4>
+<div class="recbox" id="rec-4">
+<iframe src="https://www.youtube-nocookie.com/embed/g6drYrgCcnY" title="הקלטת שיעור 4" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div></div>
 <div class="todo"><h4>📝 תרגילי הבית של שיעור {n(4)}: מה פותרים, ובאיזה סדר</h4>
 <p style="font-size:16px;margin:0 0 8px">כל התרגילים נמצאים ב<b>קובץ התרגול</b>: לכל שאלה גיליון משלה, לפי סדר המצגת. אין חובת הגשה.</p>
 <ol>
